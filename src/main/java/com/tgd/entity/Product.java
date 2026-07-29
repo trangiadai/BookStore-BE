@@ -13,11 +13,11 @@ public class Product {
 	private BigDecimal sellingPrice;
 	private Integer quantity;
 	private String description;
-	private Set<ProductImage> imageUrls = new HashSet<>();
+	private Set<ProductImage> productImages = new HashSet<>();
 	private LocalDateTime createdAt;
 
 	public Product(Long id, String name, String category, BigDecimal importPrice, BigDecimal sellingPrice,
-			Integer quantity, String description, Set<ProductImage> imageUrls, LocalDateTime createdAt) {
+			Integer quantity, String description, Set<ProductImage> productImages, LocalDateTime createdAt) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -26,7 +26,7 @@ public class Product {
 		this.sellingPrice = sellingPrice;
 		this.quantity = quantity;
 		this.description = description;
-		this.imageUrls = imageUrls;
+		this.productImages = productImages;
 		this.createdAt = createdAt;
 	}
 
@@ -92,11 +92,11 @@ public class Product {
 	}
 
 	public Set<ProductImage> getImageUrls() {
-		return imageUrls;
+		return productImages;
 	}
 
-	public void setImageUrls(Set<ProductImage> imageUrls) {
-		this.imageUrls = imageUrls;
+	public void setImageUrls(Set<ProductImage> productImages) {
+		this.productImages = productImages;
 	}
 
 	public LocalDateTime getCreatedAt() {

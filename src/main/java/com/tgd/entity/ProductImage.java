@@ -3,12 +3,14 @@ package com.tgd.entity;
 public class ProductImage {
 	private Long id;
 	private String url;
+	private String publicId;
 	private long productId;
 
-	public ProductImage(Long id, String url, long productId) {
+	public ProductImage(Long id, String url, String publicId, long productId) {
 		super();
 		this.id = id;
 		this.url = url;
+		this.publicId = publicId;
 		this.productId = productId;
 	}
 
@@ -39,6 +41,14 @@ public class ProductImage {
 
 	public void setProductId(long productId) {
 		this.productId = productId;
+	}
+
+	public String getPublicId() {
+		return publicId;
+	}
+
+	public void setPublicId(String publicId) {
+		this.publicId = publicId;
 	}
 
 }
