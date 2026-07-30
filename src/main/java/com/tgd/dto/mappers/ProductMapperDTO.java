@@ -1,5 +1,6 @@
 package com.tgd.dto.mappers;
 
+import com.tgd.dto.request.ProductRequestDTO;
 import com.tgd.dto.response.ProductResponseDTO;
 import com.tgd.entity.Product;
 import com.tgd.enums.ProductCategory;
@@ -21,5 +22,19 @@ public class ProductMapperDTO {
 		productReponse.setCreatedAt(product.getCreatedAt());
 
 		return productReponse;
+	}
+
+	public static Product toProduct(ProductRequestDTO productRequest) {
+		Product product = new Product();
+		product.setName(productRequest.getName());
+		if (productRequest.getProductCategory() != null) {
+			product.setProductCategory(ProductCategory.fromString(productRequest.getProductCategory()).name());
+		}
+		product.setImportPrice(productRequest.getImportPrice());
+		product.setSellingPrice(productRequest.getSellingPrice());
+		product.setQuantity(productRequest.getQuantity());
+		product.setDescription(productRequest.getDescription());
+
+		return product;
 	}
 }

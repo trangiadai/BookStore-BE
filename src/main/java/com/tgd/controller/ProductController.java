@@ -17,17 +17,17 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping("/products")
 public class ProductController {
-	private ProductService productService;
+	private final ProductService productService;
 	
 	@GetMapping
 	public List<ProductResponseDTO> getAllProducts() {
 		return productService.getAllProducts();
 	}
 	
-//	@PostMapping
-//	public ProductResponseDTO createProduct(@Valid @RequestBody ProductRequestDTO productRequest) {
-//		return productService.createProduct();
-//	}
+	@PostMapping
+	public ProductResponseDTO createProduct(@Valid @RequestBody ProductRequestDTO productRequest) {
+		return productService.createProduct(productRequest);
+	}
 
 	public ProductController(ProductService productService) {
 		super();

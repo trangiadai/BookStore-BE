@@ -9,9 +9,14 @@ import com.tgd.entity.Product;
 
 @Repository
 public class ProductRepository {
-	private ProductMapper productMapper;
+	private final ProductMapper productMapper;
 
 	public List<Product> getAllProducts() {
+		
+		return productMapper.getAllProducts();
+	}
+	
+	public Number createProduct() {
 		
 		return productMapper.getAllProducts();
 	}

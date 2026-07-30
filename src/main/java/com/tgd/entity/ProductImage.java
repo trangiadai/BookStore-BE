@@ -4,9 +4,9 @@ public class ProductImage {
 	private Long id;
 	private String url;
 	private String publicId;
-	private long productId;
+	private Long productId;
 
-	public ProductImage(Long id, String url, String publicId, long productId) {
+	public ProductImage(Long id, String url, String publicId, Long productId) {
 		super();
 		this.id = id;
 		this.url = url;
@@ -35,11 +35,11 @@ public class ProductImage {
 		this.url = url;
 	}
 
-	public long getProductId() {
+	public Long getProductId() {
 		return productId;
 	}
 
-	public void setProductId(long productId) {
+	public void setProductId(Long productId) {
 		this.productId = productId;
 	}
 
