@@ -1,22 +1,26 @@
-package com.tgd.entity;
+package com.tgd.dto.response;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Set;
 
-public class Product {
+import com.tgd.entity.ProductImage;
+import com.tgd.enums.ProductCategory;
+
+public class ProductResponseDTO {
 	private Long id;
 	private String name;
+	private ProductCategory productCategory;
 	private BigDecimal importPrice;
 	private BigDecimal sellingPrice;
 	private Integer quantity;
 	private String description;
-	private String productCategory;
 	private Set<ProductImage> productImages;
 	private LocalDateTime createdAt;
 
-	public Product(Long id, String name, String productCategory, BigDecimal importPrice, BigDecimal sellingPrice,
-			Integer quantity, String description, Set<ProductImage> productImages, LocalDateTime createdAt) {
+	public ProductResponseDTO(Long id, String name, ProductCategory productCategory, BigDecimal importPrice,
+			BigDecimal sellingPrice, Integer quantity, String description, Set<ProductImage> productImages,
+			LocalDateTime createdAt) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -27,11 +31,6 @@ public class Product {
 		this.description = description;
 		this.productImages = productImages;
 		this.createdAt = createdAt;
-	}
-
-	public Product() {
-		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public Long getId() {
@@ -50,11 +49,11 @@ public class Product {
 		this.name = name;
 	}
 
-	public String getProductCategory() {
+	public ProductCategory getProductCategory() {
 		return productCategory;
 	}
 
-	public void setProductCategory(String productCategory) {
+	public void setProductCategory(ProductCategory productCategory) {
 		this.productCategory = productCategory;
 	}
 
@@ -105,5 +104,10 @@ public class Product {
 	public void setCreatedAt(LocalDateTime createdAt) {
 		this.createdAt = createdAt;
 	}
+
+	public ProductResponseDTO() {
+			super();
+			// TODO Auto-generated constructor stub
+		}
 
 }
