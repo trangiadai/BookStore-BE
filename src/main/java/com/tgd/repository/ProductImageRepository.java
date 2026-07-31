@@ -3,9 +3,12 @@ package com.tgd.repository;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.stereotype.Repository;
+
 import com.tgd.dao.mappers.ProductImageMapper;
 import com.tgd.entity.ProductImage;
 
+@Repository
 public class ProductImageRepository {
 	private final ProductImageMapper productImageMapper;
 

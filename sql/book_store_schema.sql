@@ -1,4 +1,7 @@
-CREATE DATABASE book_store_db;
+CREATE DATABASE IF NOT EXISTS book_store_db
+    CHARACTER SET utf8mb4
+    COLLATE utf8mb4_unicode_ci;
+
 USE book_store_db;
 -- 1. Create categories table
 CREATE TABLE categories (
@@ -11,7 +14,7 @@ CREATE TABLE categories (
 -- 2. Create products table
 CREATE TABLE products (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
+    name VARCHAR(100) NOT NULL,
     import_price DECIMAL(12, 2) NOT NULL DEFAULT 0.00,
     selling_price DECIMAL(12, 2) NOT NULL DEFAULT 0.00,
     quantity INT NOT NULL DEFAULT 0,

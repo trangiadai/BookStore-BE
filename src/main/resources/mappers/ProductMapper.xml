@@ -52,38 +52,17 @@
 		<include refid="productFullSelect" />
 		ORDER BY p.id DESC
 	</select>
-
-	<!--<select id="getOwnerById" parameterType="map" resultMap="OwnerWithPetsMap">
-		<include refid="ownerFullSelect" /> WHERE o.id = #{id} </select>
-
-	<select id="searchOwners" parameterType="map" resultMap="OwnerWithPetsMap">
-		<include refid="ownerFullSelect" /> WHERE o.name LIKE CONCAT('%',
-		#{keyword}, '%') OR o.phone LIKE CONCAT('%', #{keyword}, '%') ORDER BY
-		o.id DESC </select>
-
-	<insert id="createOwner" parameterType="map" useGeneratedKeys="true"
-		keyProperty="id">
-		INSERT INTO owners (name, phone, email, address)
+	
+	<insert id="createProduct" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO products (name, import_price, selling_price, quantity, description, category_id)
 		VALUES (
-		#{name},
-		#{phone},
-		#{email},
-		#{address}
+			#{name},
+			#{importPrice},
+			#{sellingPrice},
+			#{quantity},
+			#{description},
+			(SELECT id FROM categories WHERE LOWER(name) = LOWER(#{productCategory}) LIMIT 1)
 		)
 	</insert>
-
-	<update id="updateOwner" parameterType="map">
-		UPDATE owners o
-		SET
-		o.name = #{name},
-		o.phone = #{phone},
-		o.email = #{email},
-		o.address = #{address}
-		WHERE o.id = #{id}
-	</update>
-
-	<delete id="deleteOwnerById" parameterType="map">
-		DELETE FROM owners WHERE id = #{ownerId}
-	</delete>-->
 
 </mapper>

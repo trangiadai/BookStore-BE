@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tgd.dao.mappers.ProductImageMapper">
+
+	<resultMap id="ProductImageResultMap" type="com.tgd.entity.ProductImage">
+		<id property="id" column="product_image_id" />
+		<result property="url" column="product_image_url" />
+		<result property="publicId" column="product_image_public_id" />
+		<result property="productId" column="product_image_product_id" />
+	</resultMap>
+
+	<sql id="ProductImageColumns">
+		pi.id AS product_image_id,
+		pi.url AS product_image_url,
+		pi.public_id AS product_image_public_id,
+		pi.product_id AS product_image_product_id
+	</sql>
+
+	<sql id="productImageFullSelect"> 
+		SELECT 
+			<include refid="ProductImageColumns" />
+		FROM product_images pi
+	</sql>
+
+	<select id="getAllProductImages" resultMap="ProductImageResultMap">
+		<include refid="productImageFullSelect" />
+		ORDER BY p.id DESC
+	</select>
+	
+	<insert id="createProductImage" parameterType="map" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO product_images (url, public_id, product_id)
+		VALUES (
+			#{url},
+			#{publicId},
+			#{productId}
+		)
+	</insert>
+
+	<!--<select id="getOwnerById" parameterType="map" resultMap="OwnerWithPetsMap">
+		<include refid="ownerFullSelect" /> WHERE o.id = #{id} </select>
+
+	<select id="searchOwners" parameterType="map" resultMap="OwnerWithPetsMap">
+		<include refid="ownerFullSelect" /> WHERE o.name LIKE CONCAT('%',
+		#{keyword}, '%') OR o.phone LIKE CONCAT('%', #{keyword}, '%') ORDER BY
+		o.id DESC </select>
+
+	
+
+	<update id="updateOwner" parameterType="map">
+		UPDATE owners o
+		SET
+		o.name = #{name},
+		o.phone = #{phone},
+		o.email = #{email},
+		o.address = #{address}
+		WHERE o.id = #{id}
+	</update>
+
+	<delete id="deleteOwnerById" parameterType="map">
+		DELETE FROM owners WHERE id = #{ownerId}
+	</delete>-->
+
+</mapper>
