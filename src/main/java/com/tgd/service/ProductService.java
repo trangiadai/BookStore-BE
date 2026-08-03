@@ -28,27 +28,55 @@ public class ProductService {
 		return products.stream().map(ProductMapperDTO::toProductResponse).collect(Collectors.toList());
 	}
 
-	@Transactional
 	public ProductResponseDTO createProduct(ProductRequestDTO productRequest) {
-		Product product = ProductMapperDTO.toProduct(productRequest);
-		product.setId(productResitory.createProduct(product).longValue());
-		
-		Set<ProductImage> productImages = new HashSet<>();
+		Set<ProductImage> uploadedImages = new HashSet<>();
 		Set<MultipartFile> rawProductImages = productRequest.getProductImages();
 		if (rawProductImages != null && !rawProductImages.isEmpty()) {
-			for (MultipartFile rawProductImage : rawProductImages) {
-				if (rawProductImage != null && !rawProductImage.isEmpty()) {
+			for (MultipartFile file : rawProductImages) {
+				if (file != null && !file.isEmpty()) {
 					try {
-						productImages.add(productImageService.createProductImage(rawProductImage, product.getId()));
+						ProductImage image = productImageService.uploadToCloudinary(file);
+						uploadedImages.add(image);
 					} catch (IOException e) {
-						e.printStackTrace();
+						// Cleanup files uploaded so far if one upload fails
+						rollbackCloudinaryUploads(uploadedImages);
+						throw new RuntimeException("Image upload failed", e);
 					}
 				}
 			}
 		}
-		product.setProductImages(productImages);	
+		try {
+			return saveProductAndImages(productRequest, uploadedImages);
+		} catch (Exception e) {
+			// If DB insert fails, delete files from Cloudinary
+			rollbackCloudinaryUploads(uploadedImages);
+			throw e;
+		}
+	}
+
+	// Helper method to handle DB insertion in a tight transaction
+	@Transactional
+	protected ProductResponseDTO saveProductAndImages(ProductRequestDTO productRequest,
+			Set<ProductImage> uploadedImages) {
+
+		Product product = ProductMapperDTO.toProduct(productRequest);
+		product.setId(productResitory.createProduct(product).longValue());
+
+		Set<ProductImage> savedImages = new HashSet<>();
+		for (ProductImage img : uploadedImages) {
+			savedImages.add(productImageService.saveProductImageToDb(img, product.getId()));
+		}
+		product.setProductImages(savedImages);
 
 		return ProductMapperDTO.toProductResponse(product);
+	}
+
+	private void rollbackCloudinaryUploads(Set<ProductImage> images) {
+		for (ProductImage img : images) {
+			if (img.getPublicId() != null) {
+				productImageService.deleteFromCloudinary(img.getPublicId());
+			}
+		}
 	}
 
 	public ProductService(ProductRepository productResitory, ProductImageService productImageService) {

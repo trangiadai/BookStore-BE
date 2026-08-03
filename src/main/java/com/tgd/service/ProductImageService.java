@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.tgd.dto.mappers.ProductImageMapperDTO;
@@ -15,13 +16,28 @@ public class ProductImageService {
 	private final ProductImageRepository productImageRepository;
 	private final CloudinaryService cloudinaryService;
 
-	public ProductImage createProductImage(MultipartFile rawProductImage, Long productId) throws IOException {
+	// STEP 1: HTTP Call to Cloudinary (Run OUTSIDE @Transactional)
+	public ProductImage uploadToCloudinary(MultipartFile rawProductImage) throws IOException {
 		Map uploadResult = cloudinaryService.uploadFile(rawProductImage, "products");
-		ProductImage productImage = ProductImageMapperDTO.toProductImage(uploadResult);
-		productImage.setProductId(productId);
-		productImage.setId(productImageRepository.createProductImage(productImage).longValue());
+		return ProductImageMapperDTO.toProductImage(uploadResult);
+	}
 
+	// STEP 2: Database Insert (Run INSIDE @Transactional)
+	@Transactional
+	public ProductImage saveProductImageToDb(ProductImage productImage, Long productId) {
+		productImage.setProductId(productId);
+		Long id = productImageRepository.createProductImage(productImage).longValue();
+		productImage.setId(id);
 		return productImage;
+	}
+
+	// Helper method to clean up Cloudinary if DB fails
+	public void deleteFromCloudinary(String publicId) {
+		try {
+			cloudinaryService.deleteFile(publicId);
+		} catch (IOException e) {
+			// Log warning for manual cleanup if necessary
+		}
 	}
 
 	public ProductImageService(ProductImageRepository productImageRepository, CloudinaryService cloudinaryService) {
