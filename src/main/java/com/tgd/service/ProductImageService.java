@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.tgd.dto.mappers.ProductImageMapperDTO;
@@ -22,8 +21,6 @@ public class ProductImageService {
 		return ProductImageMapperDTO.toProductImage(uploadResult);
 	}
 
-	// STEP 2: Database Insert (Run INSIDE @Transactional)
-	@Transactional
 	public ProductImage saveProductImageToDb(ProductImage productImage, Long productId) {
 		productImage.setProductId(productId);
 		Long id = productImageRepository.createProductImage(productImage).longValue();
