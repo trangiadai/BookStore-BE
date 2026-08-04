@@ -8,6 +8,10 @@ import com.tgd.enums.ProductCategory;
 public class ProductMapperDTO {
 
 	public static ProductResponseDTO toProductResponse(Product product) {
+		if (product == null) {
+			return null;
+		}
+
 		ProductResponseDTO productReponse = new ProductResponseDTO();
 		productReponse.setId(product.getId());
 		productReponse.setName(product.getName());
@@ -25,6 +29,10 @@ public class ProductMapperDTO {
 	}
 
 	public static Product toProduct(ProductRequestDTO productRequest) {
+		if (productRequest == null) {
+			return null;
+		}
+
 		Product product = new Product();
 		product.setName(productRequest.getName());
 		if (productRequest.getProductCategory() != null) {

@@ -1,11 +1,7 @@
 package com.tgd.dto.request;
 
 import java.math.BigDecimal;
-import java.util.Set;
 
-import org.springframework.web.multipart.MultipartFile;
-
-import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
@@ -45,11 +41,11 @@ public class ProductRequestDTO {
 	@Schema(description = "The category of the product", example = "TECHNOLOGY")
 	private String productCategory;
 
-	@ArraySchema(schema = @Schema(type = "string", format = "binary"), arraySchema = @Schema(description = "Optional product images", nullable = true, requiredMode = Schema.RequiredMode.NOT_REQUIRED))
-	private Set<MultipartFile> productImages;
+//	@ArraySchema(schema = @Schema(type = "string", format = "binary"), arraySchema = @Schema(description = "Optional product images", nullable = true, requiredMode = Schema.RequiredMode.NOT_REQUIRED))
+//	private Set<MultipartFile> productImages;
 
 	public ProductRequestDTO(String name, BigDecimal importPrice, BigDecimal sellingPrice, Integer quantity,
-			String description, String productCategory, Set<MultipartFile> productImages) {
+			String description, String productCategory) {
 		super();
 		this.name = name;
 		this.importPrice = importPrice;
@@ -57,7 +53,6 @@ public class ProductRequestDTO {
 		this.quantity = quantity;
 		this.description = description;
 		this.productCategory = productCategory;
-		this.productImages = productImages;
 	}
 
 	public ProductRequestDTO() {
@@ -111,14 +106,6 @@ public class ProductRequestDTO {
 
 	public void setProductCategory(String productCategory) {
 		this.productCategory = productCategory;
-	}
-
-	public Set<MultipartFile> getProductImages() {
-		return productImages;
-	}
-
-	public void setProductImages(Set<MultipartFile> productImages) {
-		this.productImages = productImages;
 	}
 
 }

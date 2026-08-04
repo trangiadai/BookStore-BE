@@ -12,4 +12,6 @@ public interface ProductMapper {
 	List<Product> getAllProducts();
 
 	void createProduct(Map<String, Object> param);
+	
+	Product getProductById(Map<String, Object> param);
 }

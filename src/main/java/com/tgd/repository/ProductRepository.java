@@ -12,6 +12,13 @@ import com.tgd.entity.Product;
 @Repository
 public class ProductRepository {
 	private final ProductMapper productMapper;
+	
+	public Product getProductById(Long id) {
+		Map<String, Object> param = new HashMap<>();
+		param.put("id", id);
+		
+		return productMapper.getProductById(param);
+	}
 
 	public List<Product> getAllProducts() {
 		

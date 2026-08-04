@@ -47,6 +47,11 @@
 		LEFT JOIN product_images pi ON p.id = pi.product_id
 		LEFT JOIN categories c ON p.category_id = c.id
 	</sql>
+	
+	<select id="getProductById" resultMap="ProductResultMap">
+		<include refid="productFullSelect" />
+		WHERE p.id = #{id}
+	</select>
 
 	<select id="getAllProducts" resultMap="ProductResultMap">
 		<include refid="productFullSelect" />
