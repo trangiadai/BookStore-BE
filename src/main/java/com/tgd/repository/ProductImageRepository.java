@@ -11,6 +11,13 @@ import com.tgd.entity.ProductImage;
 @Repository
 public class ProductImageRepository {
 	private final ProductImageMapper productImageMapper;
+	
+	public ProductImage getProductImageById(Long productImageId) {
+		Map<String, Object> param = new HashMap<>();
+		param.put("productImageId", productImageId);
+		
+		return productImageMapper.getProductImageById(param);
+	}
 
 	public Number createProductImage(ProductImage productImage) {
 		Map<String, Object> param = new HashMap<>();
@@ -20,6 +27,13 @@ public class ProductImageRepository {
 
 		productImageMapper.createProductImage(param);
 		return (Number) param.get("id");
+	}
+	
+	public int deleteProductImage(Long productImageId) {
+		Map<String, Object> param = new HashMap<>();
+		param.put("productImageId", productImageId);
+		
+		return productImageMapper.deleteProductImage(param);
 	}
 
 	public ProductImageRepository(ProductImageMapper productImageMapper) {

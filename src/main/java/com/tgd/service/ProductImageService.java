@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.tgd.dto.mappers.ProductImageMapperDTO;
@@ -18,6 +19,22 @@ public class ProductImageService {
 	private final ProductImageRepository productImageRepository;
 	private final CloudinaryService cloudinaryService;
 	private final ProductService productService;
+
+	public int deleteProductImage(Long productImageId) {
+		ProductImage productImage = getProductImageById(productImageId);
+
+		if (productImage == null) {
+			throw new IllegalArgumentException("Not found the product image with id: " + productImageId);
+		}
+
+		deleteFromCloudinary(productImage.getPublicId());
+
+		return productImageRepository.deleteProductImage(productImage.getId());
+	}
+
+	private ProductImage getProductImageById(Long productImageId) {
+		return productImageRepository.getProductImageById(productImageId);
+	}
 
 	public Set<ProductImage> createProductImage(Set<MultipartFile> productImages, Long productId) {
 		if (productService.getProductById(productId) == null) {

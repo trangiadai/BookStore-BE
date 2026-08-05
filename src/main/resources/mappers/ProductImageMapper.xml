@@ -22,6 +22,11 @@
 			<include refid="ProductImageColumns" />
 		FROM product_images pi
 	</sql>
+	
+	<select id="getProductImageById" resultMap="ProductImageResultMap">
+		<include refid="productImageFullSelect" />
+		WHERE pi.id = #{productImageId}
+	</select>
 
 	<select id="getAllProductImages" resultMap="ProductImageResultMap">
 		<include refid="productImageFullSelect" />
@@ -36,29 +41,9 @@
 			#{productId}
 		)
 	</insert>
-
-	<!--<select id="getOwnerById" parameterType="map" resultMap="OwnerWithPetsMap">
-		<include refid="ownerFullSelect" /> WHERE o.id = #{id} </select>
-
-	<select id="searchOwners" parameterType="map" resultMap="OwnerWithPetsMap">
-		<include refid="ownerFullSelect" /> WHERE o.name LIKE CONCAT('%',
-		#{keyword}, '%') OR o.phone LIKE CONCAT('%', #{keyword}, '%') ORDER BY
-		o.id DESC </select>
-
 	
-
-	<update id="updateOwner" parameterType="map">
-		UPDATE owners o
-		SET
-		o.name = #{name},
-		o.phone = #{phone},
-		o.email = #{email},
-		o.address = #{address}
-		WHERE o.id = #{id}
-	</update>
-
-	<delete id="deleteOwnerById" parameterType="map">
-		DELETE FROM owners WHERE id = #{ownerId}
-	</delete>-->
+	<delete id="deleteProductImage">
+		DELETE FROM product_images WHERE id = #{productImageId}
+	</delete>
 
 </mapper>

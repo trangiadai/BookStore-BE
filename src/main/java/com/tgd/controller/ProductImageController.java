@@ -6,7 +6,9 @@ import java.util.Set;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -21,7 +23,7 @@ import com.tgd.service.ProductImageService;
 @RequestMapping("/product-images")
 public class ProductImageController {
 	private final ProductImageService productImageService;
-	
+
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
 		// Convert empty MultipartFile items to null
@@ -37,12 +39,16 @@ public class ProductImageController {
 	}
 
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @ResponseStatus(HttpStatus.CREATED)
-    public Set<ProductImage> createProductImage(
-            @RequestParam("productImages") Set<MultipartFile> productImages, 
-            @RequestParam("productId") Long productId) {
-        return productImageService.createProductImage(productImages, productId);
-    }
+	@ResponseStatus(HttpStatus.CREATED)
+	public Set<ProductImage> createProductImage(@RequestParam("productImages") Set<MultipartFile> productImages,
+			@RequestParam("productId") Long productId) {
+		return productImageService.createProductImage(productImages, productId);
+	}
+
+	@DeleteMapping("/{productImageId}")
+	public int deleteProductImage(@PathVariable("productImageId") Long productImageId) {
+		return productImageService.deleteProductImage(productImageId);
+	}
 
 	public ProductImageController(ProductImageService productImageService) {
 		super();
