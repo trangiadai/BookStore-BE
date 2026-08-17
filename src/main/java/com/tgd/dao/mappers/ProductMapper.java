@@ -14,4 +14,8 @@ public interface ProductMapper {
 	void createProduct(Map<String, Object> param);
 	
 	Product getProductById(Map<String, Object> param);
+	
+	int softDeleteProduct(Map<String, Object> param);
+	
+	int hardDeleteProduct(Map<String, Object> param);
 }

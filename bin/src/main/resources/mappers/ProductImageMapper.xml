@@ -42,36 +42,8 @@
 		)
 	</insert>
 	
-	<update id="softDeleteProductImage">
-	    UPDATE product_images 
-	    SET is_deleted = 1, deleted_at = NOW() 
-	    WHERE product_image_id = #{productImageId} AND is_deleted = 0
-	</update>
-	
-	<update id="softDeleteImagesByProductId">
-	    UPDATE product_images 
-	    SET is_deleted = 1, deleted_at = NOW() 
-	    WHERE product_id = #{productId} AND is_deleted = 0
-	</update>
-	
-	<!-- Fetch ALL images for hard deletion (includes soft-deleted ones) -->
-	<select id="getAllImagesByProductId" resultType="com.tgd.entity.ProductImage">
-	    SELECT 
-		    id, 
-		    product_id AS productId, 
-		    url, 
-		    public_id AS publicId, 
-		    is_deleted AS isDeleted 
-	    FROM product_images 
-	    WHERE product_id = #{productId}
-	</select>
-
-	<delete id="hardDeleteProductImage">
-	    DELETE FROM product_images WHERE product_image_id = #{productImageId}
-	</delete>
-	
-	<delete id="hardDeleteImagesByProductId">
-	    DELETE FROM product_images WHERE product_id = #{productId}
+	<delete id="deleteProductImage">
+		DELETE FROM product_images WHERE id = #{productImageId}
 	</delete>
 
 </mapper>

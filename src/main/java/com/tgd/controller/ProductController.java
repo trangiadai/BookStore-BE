@@ -3,6 +3,7 @@ package com.tgd.controller;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,6 +38,20 @@ public class ProductController {
 	public ProductResponseDTO createProduct(@Valid @RequestBody ProductRequestDTO productRequest) {
 		return productService.createProduct(productRequest);
 	}
+	
+	// DELETE /products/10 -> Soft Delete
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void softDeleteProduct(@PathVariable Long id) {
+        productService.softDeleteProduct(id);
+    }
+
+    // DELETE /products/10/hard -> Hard Delete (Admin action)
+    @DeleteMapping("/{id}/hard")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void hardDeleteProduct(@PathVariable Long id) {
+        productService.hardDeleteProduct(id);
+    }
 
 	public ProductController(ProductService productService) {
 		super();

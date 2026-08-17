@@ -1,6 +1,7 @@
 package com.tgd.repository;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Repository;
@@ -29,11 +30,39 @@ public class ProductImageRepository {
 		return (Number) param.get("id");
 	}
 	
-	public int deleteProductImage(Long productImageId) {
+	public int softDeleteProductImage(Long productImageId) {
 		Map<String, Object> param = new HashMap<>();
 		param.put("productImageId", productImageId);
 		
-		return productImageMapper.deleteProductImage(param);
+		return productImageMapper.softDeleteProductImage(param);
+	}
+	
+	public int softDeleteImagesByProductId(Long productId) {
+		Map<String, Object> param = new HashMap<>();
+		param.put("productId", productId);
+		
+		return productImageMapper.softDeleteImagesByProductId(param);
+	}
+	
+	public int hardDeleteProductImage(Long productImageId) {
+		Map<String, Object> param = new HashMap<>();
+		param.put("productImageId", productImageId);
+		
+		return productImageMapper.hardDeleteProductImage(param);
+	}
+	
+	public int hardDeleteImagesByProductId(Long productId) {
+		Map<String, Object> param = new HashMap<>();
+		param.put("productId", productId);
+		
+		return productImageMapper.hardDeleteImagesByProductId(param);
+	}
+	
+	public List<ProductImage> getAllImagesByProductId(Long productId){
+		Map<String, Object> param = new HashMap<>();
+		param.put("productId", productId);
+		
+		return productImageMapper.getAllImagesByProductId(param);
 	}
 
 	public ProductImageRepository(ProductImageMapper productImageMapper) {

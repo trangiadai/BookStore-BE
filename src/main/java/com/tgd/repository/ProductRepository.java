@@ -37,6 +37,22 @@ public class ProductRepository {
 		
 		return (Number) param.get("id");
 	}
+	
+	public int softDeleteProduct(Long productId) {
+		Map<String, Object> param = new HashMap<>();
+		param.put("productId", productId);
+		
+		return productMapper.softDeleteProduct(param);
+	}
+	
+	public int hardDeleteProduct(Long productId) {
+		Map<String, Object> param = new HashMap<>();
+		param.put("productId", productId);
+		
+		return productMapper.hardDeleteProduct(param);
+	}
+	
+	
 
 	public ProductRepository(ProductMapper productMapper) {
 		super();

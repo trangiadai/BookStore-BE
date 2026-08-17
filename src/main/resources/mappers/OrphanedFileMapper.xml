@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tgd.dao.mappers.OrphanedFileMapper">
+
+    <!-- Result Map for OrphanedFile -->
+    <resultMap id="OrphanedFileResultMap" type="com.tgd.entity.OrphanedFile">
+        <id property="id" column="id"/>
+        <result property="publicId" column="public_id"/>
+        <result property="status" column="status"/>
+        <result property="retryCount" column="retry_count"/>
+        <result property="lastError" column="last_error"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <!-- Reusable Column List -->
+    <sql id="orphanedFileColumns">
+        id, public_id, status, retry_count, last_error, created_at, updated_at
+    </sql>
+
+    <!-- 1. Insert new outbox record -->
+    <insert id="insert" parameterType="com.tgd.entity.OrphanedFile" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO orphaned_cloudinary_files (public_id, status, retry_count, last_error, created_at, updated_at)
+        VALUES (
+            #{publicId},
+            #{status},
+            #{retryCount},
+            #{lastError},
+            NOW(),
+            NOW()
+        )
+    </insert>
+
+    <!-- 2. Find pending files that haven't hit max retries yet -->
+    <select id="findPendingFiles" resultMap="OrphanedFileResultMap">
+        SELECT 
+            <include refid="orphanedFileColumns"/>
+        FROM orphaned_cloudinary_files
+        WHERE status = 'PENDING' 
+          AND retry_count &lt; #{maxRetries}
+        ORDER BY created_at ASC
+        LIMIT 50
+    </select>
+
+    <!-- 3. Find files that failed permanently after max retries -->
+    <select id="findFailedPermanentlyFiles" resultMap="OrphanedFileResultMap">
+        SELECT 
+            <include refid="orphanedFileColumns"/>
+        FROM orphaned_cloudinary_files
+        WHERE status = 'FAILED_PERMANENTLY'
+        ORDER BY updated_at DESC
+    </select>
+
+    <!-- 4. Find single record by ID (Required for manual admin retries/resolutions) -->
+    <select id="findById" resultMap="OrphanedFileResultMap">
+        SELECT 
+            <include refid="orphanedFileColumns"/>
+        FROM orphaned_cloudinary_files
+        WHERE id = #{id}
+    </select>
+
+    <!-- 5. Update status, retry count, and last error -->
+    <update id="updateStatusAndRetry" parameterType="com.tgd.entity.OrphanedFile">
+        UPDATE orphaned_cloudinary_files
+        SET 
+            status = #{status},
+            retry_count = #{retryCount},
+            last_error = #{lastError},
+            updated_at = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <!-- 6. Delete single record by ID on successful cleanup -->
+    <delete id="deleteById">
+        DELETE FROM orphaned_cloudinary_files
+        WHERE id = #{id}
+    </delete>
+
+    <!-- 7. Purge old logs (FAILED_PERMANENTLY or MANUALLY_RESOLVED) older than cutoffDate -->
+    <delete id="deleteOldFailedRecords">
+        DELETE FROM orphaned_cloudinary_files
+        WHERE status IN ('FAILED_PERMANENTLY', 'MANUALLY_RESOLVED')
+          AND created_at &lt; #{cutoffDate}
+    </delete>
+
+</mapper>

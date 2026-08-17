@@ -46,8 +46,13 @@ public class ProductImageController {
 	}
 
 	@DeleteMapping("/{productImageId}")
-	public int deleteProductImage(@PathVariable("productImageId") Long productImageId) {
-		return productImageService.deleteProductImage(productImageId);
+	public int softDeleteProductImage(@PathVariable("productImageId") Long productImageId) {
+		return productImageService.softDeleteProductImage(productImageId);
+	}
+
+	@DeleteMapping("/{productImageId}/hard")
+	public int hardDeleteProductImage(@PathVariable("productImageId") Long productImageId) {
+		return productImageService.hardDeleteProductImage(productImageId);
 	}
 
 	public ProductImageController(ProductImageService productImageService) {

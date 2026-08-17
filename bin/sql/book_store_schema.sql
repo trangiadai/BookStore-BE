@@ -72,21 +72,4 @@ INSERT INTO product_images (url, public_id, product_id) VALUES
 ('https://res.cloudinary.com/demo/image/upload/v1710000004/bookstore/products/atomic_habits_front.jpg', 'bookstore/products/atomic_habits_front', 4),
 ('https://res.cloudinary.com/demo/image/upload/v1710000005/bookstore/products/ddia_front.jpg', 'bookstore/products/ddia_front', 5);
 
-ALTER TABLE products 
-ADD COLUMN is_deleted TINYINT(1) DEFAULT 0,
-ADD COLUMN deleted_at TIMESTAMP NULL;
 
-ALTER TABLE product_images 
-ADD COLUMN is_deleted TINYINT(1) DEFAULT 0,
-ADD COLUMN deleted_at TIMESTAMP NULL;
-
-CREATE TABLE IF NOT EXISTS orphaned_cloudinary_files (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    public_id VARCHAR(255) NOT NULL,
-    status VARCHAR(30) NOT NULL DEFAULT 'PENDING', -- PENDING, COMPLETED, FAILED_PERMANENTLY, MANUALLY_RESOLVED
-    retry_count INT NOT NULL DEFAULT 0,
-    last_error TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    INDEX idx_status_retry (status, retry_count)
-);

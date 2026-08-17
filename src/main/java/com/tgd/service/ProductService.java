@@ -4,37 +4,75 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.tgd.dao.mappers.OrphanedFileMapper;
 import com.tgd.dto.mappers.ProductMapperDTO;
 import com.tgd.dto.request.ProductRequestDTO;
 import com.tgd.dto.response.ProductResponseDTO;
+import com.tgd.entity.OrphanedFile;
 import com.tgd.entity.Product;
+import com.tgd.entity.ProductImage;
 import com.tgd.repository.ProductRepository;
 
 @Service
 public class ProductService {
-	private final ProductRepository productResitory;
+	private final ProductRepository productRepository;
+	private final ProductImageService productImageService;
+	private final OrphanedFileMapper orphanedFileMapper;
+
+	@Transactional
+	public void softDeleteProduct(Long productId) {
+		ProductResponseDTO product = getProductById(productId);
+		if (product == null) {
+			throw new IllegalArgumentException("Not found active product with id: " + productId);
+		}
+
+		productImageService.softDeleteImagesByProductId(productId);
+		productRepository.softDeleteProduct(productId);
+	}
+
+	@Transactional
+	public void hardDeleteProduct(Long productId) {
+		List<ProductImage> images = productImageService.getAllImagesByProductId(productId);
+
+		for (ProductImage img : images) {
+			if (img.getPublicId() != null) {
+				OrphanedFile file = new OrphanedFile();
+				file.setPublicId(img.getPublicId());
+				file.setStatus("PENDING");
+				file.setRetryCount(0);
+				orphanedFileMapper.insert(file);
+			}
+		}
+
+		productImageService.hardDeleteImagesByProductId(productId);
+		productRepository.hardDeleteProduct(productId);
+	}
 
 	public ProductResponseDTO getProductById(Long id) {
-		return ProductMapperDTO.toProductResponse(productResitory.getProductById(id));
+		return ProductMapperDTO.toProductResponse(productRepository.getProductById(id));
 	}
 
 	public List<ProductResponseDTO> getAllProducts() {
-		List<Product> products = productResitory.getAllProducts();
+		List<Product> products = productRepository.getAllProducts();
 
 		return products.stream().map(ProductMapperDTO::toProductResponse).collect(Collectors.toList());
 	}
 
 	public ProductResponseDTO createProduct(ProductRequestDTO productRequest) {
 		Product product = ProductMapperDTO.toProduct(productRequest);
-		Long productId = productResitory.createProduct(product).longValue();
+		Long productId = productRepository.createProduct(product).longValue();
 
 		return getProductById(productId);
 	}
 
-	public ProductService(ProductRepository productResitory) {
+	public ProductService(ProductRepository productRepository, ProductImageService productImageService,
+			OrphanedFileMapper orphanedFileMapper) {
 		super();
-		this.productResitory = productResitory;
+		this.productRepository = productRepository;
+		this.productImageService = productImageService;
+		this.orphanedFileMapper = orphanedFileMapper;
 	}
 
 }
