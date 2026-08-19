@@ -50,19 +50,18 @@
 		WHERE p.is_deleted = 0
 	</sql>
 
-	<!-- 1. Fetch Single Active Product -->
+	<!-- Fetch Single Active Product -->
 	<select id="getProductById" resultMap="ProductResultMap">
 		<include refid="productFullSelect" />
 		AND p.id = #{id}
 	</select>
 
-	<!-- 2. Fetch All Active Products -->
+	<!-- Fetch All Active Products -->
 	<select id="getAllProducts" resultMap="ProductResultMap">
 		<include refid="productFullSelect" />
 		ORDER BY p.id DESC
 	</select>
 	
-	<!-- 3. Create Product -->
 	<insert id="createProduct" useGeneratedKeys="true" keyProperty="id">
 		INSERT INTO products (name, import_price, selling_price, quantity, description, category_id)
 		VALUES (
@@ -75,16 +74,14 @@
 		)
 	</insert>
 
-	<!-- 4. Soft Delete Product -->
 	<update id="softDeleteProduct">
 	    UPDATE products 
 	    SET is_deleted = 1, deleted_at = NOW() 
-	    WHERE id = #{id} AND is_deleted = 0
+	    WHERE id = #{productId} AND is_deleted = 0
 	</update>
 
-	<!-- 5. Hard Delete Product -->
 	<delete id="hardDeleteProduct">
-	    DELETE FROM products WHERE id = #{id}
+	    DELETE FROM products WHERE id = #{productId}
 	</delete>
 
 </mapper>
