@@ -38,6 +38,19 @@ public class ProductRepository {
 		return (Number) param.get("id");
 	}
 	
+	public int updateProduct(Product product) {
+		Map<String, Object> param = new HashMap<>();
+		param.put("id", product.getId());
+		param.put("name", product.getName());
+		param.put("importPrice", product.getImportPrice());
+		param.put("sellingPrice", product.getSellingPrice());
+		param.put("quantity", product.getQuantity());
+		param.put("description", product.getDescription());
+		param.put("productCategory", product.getProductCategory());
+		
+		return productMapper.updateProduct(param);
+	}
+	
 	public int softDeleteProduct(Long productId) {
 		Map<String, Object> param = new HashMap<>();
 		param.put("productId", productId);

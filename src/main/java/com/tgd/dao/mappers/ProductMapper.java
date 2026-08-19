@@ -13,6 +13,8 @@ public interface ProductMapper {
 
 	void createProduct(Map<String, Object> param);
 	
+	int updateProduct(Map<String, Object> param);
+	
 	Product getProductById(Map<String, Object> param);
 	
 	int softDeleteProduct(Map<String, Object> param);

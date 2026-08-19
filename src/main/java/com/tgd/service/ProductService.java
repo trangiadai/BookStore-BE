@@ -28,7 +28,8 @@ public class ProductService {
 			throw new IllegalArgumentException("Not found active product with id: " + productId);
 		}
 
-		return productImageService.softDeleteImagesByProductId(productId) + productRepository.softDeleteProduct(productId);
+		return productImageService.softDeleteImagesByProductId(productId)
+				+ productRepository.softDeleteProduct(productId);
 	}
 
 	@Transactional
@@ -45,7 +46,8 @@ public class ProductService {
 			}
 		}
 
-		return productImageService.hardDeleteImagesByProductId(productId) + productRepository.hardDeleteProduct(productId);
+		return productImageService.hardDeleteImagesByProductId(productId)
+				+ productRepository.hardDeleteProduct(productId);
 	}
 
 	public ProductResponseDTO getProductById(Long id) {
@@ -63,6 +65,14 @@ public class ProductService {
 		Long productId = productRepository.createProduct(product).longValue();
 
 		return getProductById(productId);
+	}
+
+	public ProductResponseDTO updateProduct(Long id, ProductRequestDTO productRequest) {
+		Product product = ProductMapperDTO.toProduct(productRequest);
+		product.setId(id);
+		productRepository.updateProduct(product);
+		
+		return ProductMapperDTO.toProductResponse(product);
 	}
 
 	public ProductService(ProductRepository productRepository, ProductImageService productImageService,

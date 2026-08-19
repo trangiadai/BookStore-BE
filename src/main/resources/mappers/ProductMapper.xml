@@ -73,6 +73,18 @@
 			(SELECT id FROM categories WHERE LOWER(name) = LOWER(#{productCategory}) LIMIT 1)
 		)
 	</insert>
+	
+	<update id="updateProduct">
+	    UPDATE products 
+	    SET 
+	    	name = #{name},
+			import_price = #{importPrice},
+			selling_price = #{sellingPrice},
+			quantity = #{quantity},
+			description = #{description},
+			category_id = (SELECT id FROM categories WHERE LOWER(name) = LOWER(#{productCategory}) LIMIT 1)
+	    WHERE id = #{id} AND is_deleted = 0
+	</update>
 
 	<update id="softDeleteProduct">
 	    UPDATE products 
