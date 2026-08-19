@@ -22,18 +22,17 @@ public class ProductService {
 	private final OrphanedFileMapper orphanedFileMapper;
 
 	@Transactional
-	public void softDeleteProduct(Long productId) {
+	public int softDeleteProduct(Long productId) {
 		ProductResponseDTO product = getProductById(productId);
 		if (product == null) {
 			throw new IllegalArgumentException("Not found active product with id: " + productId);
 		}
 
-		productImageService.softDeleteImagesByProductId(productId);
-		productRepository.softDeleteProduct(productId);
+		return productImageService.softDeleteImagesByProductId(productId) + productRepository.softDeleteProduct(productId);
 	}
 
 	@Transactional
-	public void hardDeleteProduct(Long productId) {
+	public int hardDeleteProduct(Long productId) {
 		List<ProductImage> images = productImageService.getAllImagesByProductId(productId);
 
 		for (ProductImage img : images) {
@@ -46,8 +45,7 @@ public class ProductService {
 			}
 		}
 
-		productImageService.hardDeleteImagesByProductId(productId);
-		productRepository.hardDeleteProduct(productId);
+		return productImageService.hardDeleteImagesByProductId(productId) + productRepository.hardDeleteProduct(productId);
 	}
 
 	public ProductResponseDTO getProductById(Long id) {

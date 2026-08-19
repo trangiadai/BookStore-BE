@@ -41,16 +41,14 @@ public class ProductController {
 	
 	// DELETE /products/10 -> Soft Delete
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void softDeleteProduct(@PathVariable Long id) {
-        productService.softDeleteProduct(id);
+    public int softDeleteProduct(@PathVariable Long id) {
+        return productService.softDeleteProduct(id);
     }
 
     // DELETE /products/10/hard -> Hard Delete (Admin action)
     @DeleteMapping("/{id}/hard")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void hardDeleteProduct(@PathVariable Long id) {
-        productService.hardDeleteProduct(id);
+    public int hardDeleteProduct(@PathVariable Long id) {
+        return productService.hardDeleteProduct(id);
     }
 
 	public ProductController(ProductService productService) {
