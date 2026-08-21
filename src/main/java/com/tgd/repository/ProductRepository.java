@@ -3,6 +3,7 @@ package com.tgd.repository;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
 
@@ -13,7 +14,7 @@ import com.tgd.entity.Product;
 public class ProductRepository {
 	private final ProductMapper productMapper;
 	
-	public Product getProductById(Long id) {
+	public Optional<Product> getProductById(Long id) {
 		Map<String, Object> param = new HashMap<>();
 		param.put("id", id);
 		

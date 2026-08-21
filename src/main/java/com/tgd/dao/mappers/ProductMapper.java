@@ -2,6 +2,7 @@ package com.tgd.dao.mappers;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.apache.ibatis.annotations.Mapper;
 
@@ -15,7 +16,7 @@ public interface ProductMapper {
 	
 	int updateProduct(Map<String, Object> param);
 	
-	Product getProductById(Map<String, Object> param);
+	Optional<Product> getProductById(Map<String, Object> param);
 	
 	int softDeleteProduct(Map<String, Object> param);
 	

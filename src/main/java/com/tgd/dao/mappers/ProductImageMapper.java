@@ -2,6 +2,7 @@ package com.tgd.dao.mappers;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.apache.ibatis.annotations.Mapper;
 
@@ -9,7 +10,7 @@ import com.tgd.entity.ProductImage;
 
 @Mapper
 public interface ProductImageMapper {
-	ProductImage getProductImageById(Map<String, Object> param);
+	Optional<ProductImage> getProductImageById(Map<String, Object> param);
 
 	int createProductImage(Map<String, Object> param);
 	

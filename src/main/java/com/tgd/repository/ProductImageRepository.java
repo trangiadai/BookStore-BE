@@ -3,6 +3,7 @@ package com.tgd.repository;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
 
@@ -13,7 +14,7 @@ import com.tgd.entity.ProductImage;
 public class ProductImageRepository {
 	private final ProductImageMapper productImageMapper;
 	
-	public ProductImage getProductImageById(Long productImageId) {
+	public Optional<ProductImage> getProductImageById(Long productImageId) {
 		Map<String, Object> param = new HashMap<>();
 		param.put("productImageId", productImageId);
 		

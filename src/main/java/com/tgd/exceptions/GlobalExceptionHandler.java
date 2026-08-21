@@ -33,12 +33,12 @@ public class GlobalExceptionHandler {
 		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
 	}
 
-//	@ExceptionHandler(Exception.class)
-//	public ResponseEntity<ErrorDetail> handleGenericException(Exception ex) {
-//		ErrorDetail error = new ErrorDetail(
-//				ex.getMessage() != null ? ex.getMessage() : "An unexpected server error occurred.",
-//				ex.getClass().getSimpleName(), HttpStatus.INTERNAL_SERVER_ERROR.value());
-//		return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
-//	}
+	@ExceptionHandler(Exception.class)
+	public ResponseEntity<ErrorDetail> handleGenericException(Exception ex) {
+		ErrorDetail error = new ErrorDetail(
+				ex.getMessage() != null ? ex.getMessage() : "An unexpected server error occurred.",
+				ex.getClass().getSimpleName(), HttpStatus.INTERNAL_SERVER_ERROR.value());
+		return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
 
 }

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tgd.dao.mappers.CategoryMapper">
+
+    <resultMap id="CategoryResultMap" type="com.tgd.entity.Category">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="description" column="description"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <sql id="categoryColumns">
+        id, name, description, created_at, updated_at
+    </sql>
+
+    <select id="getAllCategories" resultMap="CategoryResultMap">
+        SELECT <include refid="categoryColumns"/>
+        FROM categories
+        ORDER BY id DESC
+    </select>
+
+    <select id="getCategoryById" resultMap="CategoryResultMap">
+        SELECT <include refid="categoryColumns"/>
+        FROM categories
+        WHERE id = #{id}
+    </select>
+
+    <insert id="createCategory" parameterType="com.tgd.entity.Category" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO categories (name, description, created_at, updated_at)
+        VALUES (
+			#{name}, 
+			#{description}, 
+			NOW(), 
+			NOW()
+		)
+    </insert>
+
+    <update id="updateCategory" parameterType="com.tgd.entity.Category">
+        UPDATE categories
+        SET name = #{name},
+            description = #{description},
+            updated_at = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteCategory">
+        DELETE FROM categories
+        WHERE id = #{id}
+    </delete>
+
+</mapper>

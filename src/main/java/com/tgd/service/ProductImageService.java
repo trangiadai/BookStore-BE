@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.tgd.dao.mappers.OrphanedFileMapper;
 import com.tgd.dto.mappers.ProductImageMapperDTO;
+import com.tgd.entity.Category;
 import com.tgd.entity.OrphanedFile;
 import com.tgd.entity.ProductImage;
 import com.tgd.enums.OrphanedFileStatus;
@@ -42,9 +43,6 @@ public class ProductImageService {
 	@Transactional
 	public int hardDeleteProductImage(Long productImageId) {
 		ProductImage productImage = getProductImageById(productImageId);
-		if (productImage == null) {
-			throw new IllegalArgumentException("Not found the product image with id: " + productImageId);
-		}
 
 		if (productImage.getPublicId() != null) {
 			pushToOutboxQueue(productImage.getPublicId());
@@ -67,7 +65,9 @@ public class ProductImageService {
 	}
 
 	public ProductImage getProductImageById(Long productImageId) {
-		return productImageRepository.getProductImageById(productImageId);
+		ProductImage productImage = productImageRepository.getProductImageById(productImageId).orElseThrow(() -> new IllegalArgumentException("Not found the product image with id: " + productImageId));
+		
+		return productImage;
 	}
 
 	public List<ProductImage> getAllImagesByProductId(Long productId) {
