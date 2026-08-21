@@ -3,6 +3,7 @@ package com.tgd.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,7 +54,11 @@ public class CategoryService {
 		categoryRepository.getCategoryById(id)
 				.orElseThrow(() -> new IllegalArgumentException("Category not found with ID: " + id));
 
-		return categoryRepository.deleteCategory(id);
+		try {
+			return categoryRepository.deleteCategory(id);
+	    } catch (DataIntegrityViolationException e) {
+	        throw new IllegalArgumentException("Cannot delete this category because products are still assigned to it.");
+	    }
 	}
 
 	public CategoryService(CategoryRepository categoryRepository) {

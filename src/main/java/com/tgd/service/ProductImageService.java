@@ -9,12 +9,10 @@ import java.util.Set;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.tgd.dao.mappers.OrphanedFileMapper;
 import com.tgd.dto.mappers.ProductImageMapperDTO;
-import com.tgd.entity.Category;
 import com.tgd.entity.OrphanedFile;
 import com.tgd.entity.ProductImage;
 import com.tgd.enums.OrphanedFileStatus;

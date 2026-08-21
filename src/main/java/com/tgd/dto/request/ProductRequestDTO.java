@@ -7,6 +7,7 @@ import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 
@@ -37,22 +38,20 @@ public class ProductRequestDTO {
 	@Schema(description = "Description", example = "Ergonomic wireless mouse with high precision sensor.")
 	private String description;
 
-	@NotNull(message = "The category of product can't be empty or invalid value")
-	@Schema(description = "The category of the product", example = "TECHNOLOGY")
-	private String productCategory;
-
-//	@ArraySchema(schema = @Schema(type = "string", format = "binary"), arraySchema = @Schema(description = "Optional product images", nullable = true, requiredMode = Schema.RequiredMode.NOT_REQUIRED))
-//	private Set<MultipartFile> productImages;
+	@Schema(description = "The category id of the product", example = "1")
+	@NotNull(message = "The product's category ID is required")
+	@Positive(message = "The product's category ID must be the positive number")
+	private Long categoryId;
 
 	public ProductRequestDTO(String name, BigDecimal importPrice, BigDecimal sellingPrice, Integer quantity,
-			String description, String productCategory) {
+			String description, Long categoryId) {
 		super();
 		this.name = name;
 		this.importPrice = importPrice;
 		this.sellingPrice = sellingPrice;
 		this.quantity = quantity;
 		this.description = description;
-		this.productCategory = productCategory;
+		this.categoryId = categoryId;
 	}
 
 	public ProductRequestDTO() {
@@ -100,12 +99,12 @@ public class ProductRequestDTO {
 		this.description = description;
 	}
 
-	public String getProductCategory() {
-		return productCategory;
+	public Long getCategoryId() {
+		return categoryId;
 	}
 
-	public void setProductCategory(String productCategory) {
-		this.productCategory = productCategory;
+	public void setCategoryId(Long categoryId) {
+		this.categoryId = categoryId;
 	}
 
 }

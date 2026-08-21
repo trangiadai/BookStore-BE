@@ -33,7 +33,7 @@ public class ProductRepository {
 		param.put("sellingPrice", product.getSellingPrice());
 		param.put("quantity", product.getQuantity());
 		param.put("description", product.getDescription());
-		param.put("productCategory", product.getProductCategory());
+		param.put("categoryId", product.getCategoryId());
 		productMapper.createProduct(param);
 		
 		return (Number) param.get("id");
@@ -47,7 +47,7 @@ public class ProductRepository {
 		param.put("sellingPrice", product.getSellingPrice());
 		param.put("quantity", product.getQuantity());
 		param.put("description", product.getDescription());
-		param.put("productCategory", product.getProductCategory());
+		param.put("categoryId", product.getCategoryId());
 		
 		return productMapper.updateProduct(param);
 	}

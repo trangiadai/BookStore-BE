@@ -5,30 +5,31 @@ import java.time.LocalDateTime;
 import java.util.Set;
 
 import com.tgd.entity.ProductImage;
-import com.tgd.enums.ProductCategory;
 
 public class ProductResponseDTO {
 	private Long id;
 	private String name;
-	private ProductCategory productCategory;
 	private BigDecimal importPrice;
 	private BigDecimal sellingPrice;
 	private Integer quantity;
 	private String description;
+	private Long categoryId;
+	private String categoryName;
 	private Set<ProductImage> productImages;
 	private LocalDateTime createdAt;
 
-	public ProductResponseDTO(Long id, String name, ProductCategory productCategory, BigDecimal importPrice,
-			BigDecimal sellingPrice, Integer quantity, String description, Set<ProductImage> productImages,
-			LocalDateTime createdAt) {
+	public ProductResponseDTO(Long id, String name, String productCategory, BigDecimal importPrice,
+			BigDecimal sellingPrice, Integer quantity, String description, Long categoryId, String categoryName,
+			Set<ProductImage> productImages, LocalDateTime createdAt) {
 		super();
 		this.id = id;
 		this.name = name;
-		this.productCategory = productCategory;
 		this.importPrice = importPrice;
 		this.sellingPrice = sellingPrice;
 		this.quantity = quantity;
 		this.description = description;
+		this.categoryId = categoryId;
+		this.categoryName = categoryName;
 		this.productImages = productImages;
 		this.createdAt = createdAt;
 	}
@@ -47,14 +48,6 @@ public class ProductResponseDTO {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public ProductCategory getProductCategory() {
-		return productCategory;
-	}
-
-	public void setProductCategory(ProductCategory productCategory) {
-		this.productCategory = productCategory;
 	}
 
 	public BigDecimal getImportPrice() {
@@ -89,6 +82,22 @@ public class ProductResponseDTO {
 		this.description = description;
 	}
 
+	public Long getCategoryId() {
+		return categoryId;
+	}
+
+	public void setCategoryId(Long categoryId) {
+		this.categoryId = categoryId;
+	}
+
+	public String getCategoryName() {
+		return categoryName;
+	}
+
+	public void setCategoryName(String categoryName) {
+		this.categoryName = categoryName;
+	}
+
 	public Set<ProductImage> getProductImages() {
 		return productImages;
 	}
@@ -106,8 +115,8 @@ public class ProductResponseDTO {
 	}
 
 	public ProductResponseDTO() {
-			super();
-			// TODO Auto-generated constructor stub
-		}
+		super();
+		// TODO Auto-generated constructor stub
+	}
 
 }

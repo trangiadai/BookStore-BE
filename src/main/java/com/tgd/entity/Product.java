@@ -11,20 +11,23 @@ public class Product {
 	private BigDecimal sellingPrice;
 	private Integer quantity;
 	private String description;
-	private String productCategory;
+	private Long categoryId;
+	private String categoryName;
 	private Set<ProductImage> productImages;
 	private LocalDateTime createdAt;
 
-	public Product(Long id, String name, String productCategory, BigDecimal importPrice, BigDecimal sellingPrice,
-			Integer quantity, String description, Set<ProductImage> productImages, LocalDateTime createdAt) {
+	public Product(Long id, String name, BigDecimal importPrice, BigDecimal sellingPrice, Integer quantity,
+			String description, Long categoryId, String categoryName, Set<ProductImage> productImages,
+			LocalDateTime createdAt) {
 		super();
 		this.id = id;
 		this.name = name;
-		this.productCategory = productCategory;
 		this.importPrice = importPrice;
 		this.sellingPrice = sellingPrice;
 		this.quantity = quantity;
 		this.description = description;
+		this.categoryId = categoryId;
+		this.categoryName = categoryName;
 		this.productImages = productImages;
 		this.createdAt = createdAt;
 	}
@@ -48,14 +51,6 @@ public class Product {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public String getProductCategory() {
-		return productCategory;
-	}
-
-	public void setProductCategory(String productCategory) {
-		this.productCategory = productCategory;
 	}
 
 	public BigDecimal getImportPrice() {
@@ -88,6 +83,22 @@ public class Product {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public Long getCategoryId() {
+		return categoryId;
+	}
+
+	public void setCategoryId(Long categoryId) {
+		this.categoryId = categoryId;
+	}
+
+	public String getCategoryName() {
+		return categoryName;
+	}
+
+	public void setCategoryName(String categoryName) {
+		this.categoryName = categoryName;
 	}
 
 	public Set<ProductImage> getProductImages() {
