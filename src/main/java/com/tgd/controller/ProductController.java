@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tgd.dto.request.ProductRequestDTO;
+import com.tgd.dto.request.ProductSearchSortFilterDTO;
 import com.tgd.dto.response.ProductResponseDTO;
 import com.tgd.service.ProductService;
 
@@ -39,23 +40,29 @@ public class ProductController {
 	public ProductResponseDTO createProduct(@Valid @RequestBody ProductRequestDTO productRequest) {
 		return productService.createProduct(productRequest);
 	}
-	
+
 	@PutMapping("/{id}")
-	public ProductResponseDTO updateProduct(@PathVariable("id") Long id, @Valid @RequestBody ProductRequestDTO productRequest) {
+	public ProductResponseDTO updateProduct(@PathVariable("id") Long id,
+			@Valid @RequestBody ProductRequestDTO productRequest) {
 		return productService.updateProduct(id, productRequest);
 	}
-	
-	// DELETE /products/10 -> Soft Delete
-    @DeleteMapping("/{id}")
-    public int softDeleteProduct(@PathVariable Long id) {
-        return productService.softDeleteProduct(id);
-    }
 
-    // DELETE /products/10/hard -> Hard Delete (Admin action)
-    @DeleteMapping("/{id}/hard")
-    public int hardDeleteProduct(@PathVariable Long id) {
-        return productService.hardDeleteProduct(id);
-    }
+	// DELETE /products/10 -> Soft Delete
+	@DeleteMapping("/{id}")
+	public int softDeleteProduct(@PathVariable Long id) {
+		return productService.softDeleteProduct(id);
+	}
+
+	// DELETE /products/10/hard -> Hard Delete (Admin action)
+	@DeleteMapping("/{id}/hard")
+	public int hardDeleteProduct(@PathVariable Long id) {
+		return productService.hardDeleteProduct(id);
+	}
+
+	@GetMapping("/search")
+	public List<ProductResponseDTO> searchSortFilterProducts(@Valid ProductSearchSortFilterDTO criteria) {
+		return productService.searchSortFilterProducts(criteria);
+	}
 
 	public ProductController(ProductService productService) {
 		super();

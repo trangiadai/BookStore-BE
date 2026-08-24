@@ -8,6 +8,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Repository;
 
 import com.tgd.dao.mappers.ProductMapper;
+import com.tgd.dto.request.ProductSearchSortFilterDTO;
 import com.tgd.entity.Product;
 
 @Repository
@@ -71,6 +72,20 @@ public class ProductRepository {
 		param.put("productId", productId);
 
 		return productMapper.hardDeleteProduct(param);
+	}
+
+	public List<Product> searchSortFilterProducts(ProductSearchSortFilterDTO criteria) {
+		Map<String, Object> param = new HashMap<>();
+		param.put("name", criteria.getName());
+		param.put("categoryId", criteria.getCategoryId());
+		param.put("minPrice", criteria.getMinPrice());
+		param.put("maxPrice", criteria.getMaxPrice());
+		param.put("createdFrom", criteria.getCreatedFrom());
+		param.put("createdTo", criteria.getCreatedTo());
+		param.put("sortBy", criteria.getSortBy());
+		param.put("sortDirection", criteria.getSortDirection());
+
+		return productMapper.searchSortFilterProducts(param);
 	}
 
 	public ProductRepository(ProductMapper productMapper) {

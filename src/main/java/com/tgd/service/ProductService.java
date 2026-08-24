@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.tgd.dto.mappers.ProductMapperDTO;
 import com.tgd.dto.request.ProductRequestDTO;
+import com.tgd.dto.request.ProductSearchSortFilterDTO;
 import com.tgd.dto.response.CategoryResponseDTO;
 import com.tgd.dto.response.ProductResponseDTO;
 import com.tgd.entity.Product;
@@ -77,6 +78,12 @@ public class ProductService {
 		productRepository.updateProduct(product);
 
 		return ProductMapperDTO.toProductResponse(product);
+	}
+
+	public List<ProductResponseDTO> searchSortFilterProducts(ProductSearchSortFilterDTO criteria) {
+		List<Product> products = productRepository.searchSortFilterProducts(criteria);
+
+		return products.stream().map(ProductMapperDTO::toProductResponse).collect(Collectors.toList());
 	}
 
 	public ProductService(ProductRepository productRepository, ProductImageService productImageService,

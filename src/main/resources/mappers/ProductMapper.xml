@@ -106,5 +106,48 @@
 	    FROM products p
 	    WHERE p.id = #{id} AND p.is_deleted = 1
 	</select>
+	
+	<select id="searchSortFilterProducts" resultMap="ProductResultMap" parameterType="com.tgd.dto.request.ProductSearchSortFilterDTO">
+    SELECT 
+        <include refid="ProductColumns" />,
+        <include refid="ProductImageColumns" />
+    FROM products p
+    LEFT JOIN product_images pi ON p.id = pi.product_id AND pi.is_deleted = 0
+    LEFT JOIN categories c ON p.category_id = c.id
+    <where>
+        p.is_deleted = 0
+        
+        <!-- Search by Name (Case-Insensitive Partial Match) -->
+        <if test="name != null and name != ''">
+            AND LOWER(p.name) LIKE CONCAT('%', LOWER(#{name}), '%')
+        </if>
+        
+        <!-- Filter by Category -->
+        <if test="categoryId != null">
+            AND p.category_id = #{categoryId}
+        </if>
+        
+        <!-- Filter by Price Range -->
+        <if test="minPrice != null">
+            AND p.selling_price &gt;= #{minPrice}
+        </if>
+        <if test="maxPrice != null">
+            AND p.selling_price &lt;= #{maxPrice}
+        </if>
+        
+        <!-- Filter by Created Date Range -->
+        <if test="createdFrom != null">
+            AND p.created_at &gt;= #{createdFrom}
+        </if>
+        <if test="createdTo != null">
+            AND p.created_at &lt;= #{createdTo}
+        </if>
+    </where>
+    
+    <!-- Dynamic Sorting -->
+    <if test="sortBy != null and sortDirection != null">
+        ORDER BY ${sortBy.columnName} ${sortDirection.name()}
+    </if>
+</select>
 
 </mapper>
