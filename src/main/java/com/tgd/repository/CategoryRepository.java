@@ -25,6 +25,13 @@ public class CategoryRepository {
 		return categoryMapper.getCategoryById(param);
 	}
 
+	public List<Category> getCategoryByName(String name) {
+		Map<String, Object> param = new HashMap<>();
+		param.put("name", name);
+
+		return categoryMapper.getCategoryByName(param);
+	}
+
 	public Number createCategory(Category category) {
 		Map<String, Object> param = new HashMap<>();
 		param.put("name", category.getName());
@@ -54,5 +61,4 @@ public class CategoryRepository {
 		super();
 		this.categoryMapper = categoryMapper;
 	}
-
 }

@@ -29,6 +29,12 @@ public class CategoryService {
 		return CategoryMapperDTO.toCategoryResponse(category);
 	}
 
+	public List<CategoryResponseDTO> getCategoryByName(String name) {
+		List<Category> categories = categoryRepository.getCategoryByName(name);
+
+		return categories.stream().map(CategoryMapperDTO::toCategoryResponse).collect(Collectors.toList());
+	}
+
 	@Transactional
 	public CategoryResponseDTO createCategory(CategoryRequestDTO categoryRequest) {
 		Category category = CategoryMapperDTO.toCategory(categoryRequest);
@@ -56,9 +62,10 @@ public class CategoryService {
 
 		try {
 			return categoryRepository.deleteCategory(id);
-	    } catch (DataIntegrityViolationException e) {
-	        throw new IllegalArgumentException("Cannot delete this category because products are still assigned to it.");
-	    }
+		} catch (DataIntegrityViolationException e) {
+			throw new IllegalArgumentException(
+					"Cannot delete this category because products are still assigned to it.");
+		}
 	}
 
 	public CategoryService(CategoryRepository categoryRepository) {

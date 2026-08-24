@@ -15,6 +15,8 @@ public interface CategoryMapper {
 
 	Optional<Category> getCategoryById(Map<String, Object> param);
 
+	List<Category> getCategoryByName(Map<String, Object> param);
+
 	int createCategory(Map<String, Object> param);
 
 	int updateCategory(Map<String, Object> param);
