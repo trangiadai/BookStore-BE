@@ -53,25 +53,37 @@
 	    SET is_deleted = 1, deleted_at = NOW() 
 	    WHERE product_id = #{productId} AND is_deleted = 0
 	</update>
-	
-	<!-- Fetch ALL images for hard deletion (includes soft-deleted ones) -->
-	<select id="getAllImagesByProductId" resultType="com.tgd.entity.ProductImage">
-	    SELECT 
-		    id, 
-		    product_id AS productId, 
-		    url, 
-		    public_id AS publicId, 
-		    is_deleted AS isDeleted 
-	    FROM product_images 
-	    WHERE product_id = #{productId}
-	</select>
 
 	<delete id="hardDeleteProductImage">
-	    DELETE FROM product_images WHERE id = #{productImageId}
+	    DELETE FROM product_images 
+	    WHERE id = #{productImageId} AND is_deleted = 1
 	</delete>
 	
 	<delete id="hardDeleteImagesByProductId">
-	    DELETE FROM product_images WHERE product_id = #{productId}
+	    DELETE FROM product_images 
+	    WHERE product_id = #{productId} AND is_deleted = 1
 	</delete>
+	
+	<!-- Fetch ONLY soft-deleted images for Cloudinary outbox queue -->
+	<select id="getSoftDeletedImagesByProductId" resultType="com.tgd.entity.ProductImage">
+	    SELECT 
+	        id, 
+	        product_id AS productId, 
+	        url, 
+	        public_id AS publicId, 
+	        is_deleted AS isDeleted 
+	    FROM product_images 
+	    WHERE product_id = #{productId} AND is_deleted = 1
+	</select>
+
+	<!-- Fetch single soft-deleted image -->
+	<select id="getSoftDeletedProductImageById" resultType="com.tgd.entity.ProductImage">
+	    SELECT 
+	        id, 
+	        product_id AS productId, 
+	        public_id AS publicId 
+	    FROM product_images 
+	    WHERE id = #{productImageId} AND is_deleted = 1
+	</select>
 
 </mapper>

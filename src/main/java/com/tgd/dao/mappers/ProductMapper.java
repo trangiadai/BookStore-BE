@@ -21,4 +21,6 @@ public interface ProductMapper {
 	int softDeleteProduct(Map<String, Object> param);
 	
 	int hardDeleteProduct(Map<String, Object> param);
+	
+	Optional<Product> getSoftDeletedProductById(Map<String, Object> param);
 }

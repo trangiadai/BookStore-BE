@@ -2,6 +2,8 @@ package com.tgd.service;
 
 import com.tgd.dao.mappers.OrphanedFileMapper;
 import com.tgd.entity.OrphanedFile;
+import com.tgd.enums.OrphanedFileStatus;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -53,7 +55,7 @@ public class AdminCloudinaryCleanupService {
 	public void markAsResolved(Long id) {
 		OrphanedFile file = orphanedFileMapper.findById(id);
 		if (file != null) {
-			file.setStatus("MANUALLY_RESOLVED");
+			file.setStatus(OrphanedFileStatus.MANUALLY_RESOLVED.name());
 			orphanedFileMapper.updateStatusAndRetry(file);
 			log.info("Record ID {} manually marked as RESOLVED by admin.", id);
 		}

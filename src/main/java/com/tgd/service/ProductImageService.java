@@ -17,6 +17,7 @@ import com.tgd.entity.OrphanedFile;
 import com.tgd.entity.ProductImage;
 import com.tgd.enums.OrphanedFileStatus;
 import com.tgd.repository.ProductImageRepository;
+import com.tgd.repository.ProductRepository;
 
 @Service
 public class ProductImageService {
@@ -24,6 +25,7 @@ public class ProductImageService {
 	private final CloudinaryService cloudinaryService;
 	private final OrphanedFileMapper orphanedFileMapper; // Added for Outbox Pattern
 	private final ProductImageTxService productImageTxService;
+	private final ProductRepository productRepository;
 
 	@Transactional
 	public int softDeleteProductImage(Long productImageId) {
@@ -40,10 +42,9 @@ public class ProductImageService {
 
 	@Transactional
 	public int hardDeleteProductImage(Long productImageId) {
-		ProductImage productImage = getProductImageById(productImageId);
-
-		if (productImage.getPublicId() != null) {
-			pushToOutboxQueue(productImage.getPublicId());
+		ProductImage softDeletedImage = getSoftDeletedProductImageById(productImageId);
+		if (softDeletedImage.getPublicId() != null) {
+			pushToOutboxQueue(softDeletedImage.getPublicId());
 		}
 
 		return productImageRepository.hardDeleteProductImage(productImageId);
@@ -51,9 +52,9 @@ public class ProductImageService {
 
 	@Transactional
 	public int hardDeleteImagesByProductId(Long productId) {
-		// Fetch ALL images (including soft-deleted ones)
-		List<ProductImage> images = productImageRepository.getAllImagesByProductId(productId);
-		for (ProductImage img : images) {
+		List<ProductImage> softDeletedImages = getSoftDeletedImagesByProductId(productId);
+
+		for (ProductImage img : softDeletedImages) {
 			if (img.getPublicId() != null) {
 				pushToOutboxQueue(img.getPublicId());
 			}
@@ -62,14 +63,25 @@ public class ProductImageService {
 		return productImageRepository.hardDeleteImagesByProductId(productId);
 	}
 
-	public ProductImage getProductImageById(Long productImageId) {
-		ProductImage productImage = productImageRepository.getProductImageById(productImageId).orElseThrow(() -> new IllegalArgumentException("Not found the product image with id: " + productImageId));
-		
+	private ProductImage getSoftDeletedProductImageById(Long productImageId) {
+		ProductImage productImage = productImageRepository.getSoftDeletedProductImageById(productImageId)
+				.orElseThrow(() -> new IllegalArgumentException(
+						"Not found in garbage collection the product image with id: " + productImageId));
+
 		return productImage;
 	}
 
-	public List<ProductImage> getAllImagesByProductId(Long productId) {
-		return productImageRepository.getAllImagesByProductId(productId);
+	private List<ProductImage> getSoftDeletedImagesByProductId(Long productId) {
+		List<ProductImage> productImages = productImageRepository.getSoftDeletedImagesByProductId(productId);
+
+		return productImages;
+	}
+
+	public ProductImage getProductImageById(Long productImageId) {
+		ProductImage productImage = productImageRepository.getProductImageById(productImageId).orElseThrow(
+				() -> new IllegalArgumentException("Not found the product image with id: " + productImageId));
+
+		return productImage;
 	}
 
 	// Main entry point - NO @Transactional here (avoids holding DB connection
@@ -78,6 +90,9 @@ public class ProductImageService {
 		if (productImages == null || productImages.isEmpty()) {
 			return Collections.emptySet();
 		}
+
+		productRepository.getProductById(productId)
+				.orElseThrow(() -> new IllegalArgumentException("Not found active product with id: " + productId));
 
 		Set<ProductImage> uploadedImages = new HashSet<>();
 
@@ -136,12 +151,14 @@ public class ProductImageService {
 	}
 
 	public ProductImageService(ProductImageRepository productImageRepository, CloudinaryService cloudinaryService,
-			OrphanedFileMapper orphanedFileMapper, ProductImageTxService productImageTxService) {
+			OrphanedFileMapper orphanedFileMapper, ProductImageTxService productImageTxService,
+			ProductRepository productRepository) {
 		super();
 		this.productImageRepository = productImageRepository;
 		this.cloudinaryService = cloudinaryService;
 		this.orphanedFileMapper = orphanedFileMapper;
 		this.productImageTxService = productImageTxService;
+		this.productRepository = productRepository;
 	}
 
 }

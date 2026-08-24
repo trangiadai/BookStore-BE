@@ -95,7 +95,16 @@
 	</update>
 
 	<delete id="hardDeleteProduct">
-	    DELETE FROM products WHERE id = #{productId}
+	    DELETE FROM products 
+	    WHERE id = #{productId} AND is_deleted = 1
 	</delete>
+	
+	<select id="getSoftDeletedProductById" resultMap="ProductResultMap">
+	    SELECT 
+	        p.id AS product_id,
+	        p.name AS product_name
+	    FROM products p
+	    WHERE p.id = #{id} AND p.is_deleted = 1
+	</select>
 
 </mapper>

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.tgd.dao.mappers.OrphanedFileMapper;
 import com.tgd.entity.OrphanedFile;
+import com.tgd.enums.OrphanedFileStatus;
 
 @Service
 public class CloudinaryCleanupScheduler {
@@ -39,7 +40,7 @@ public class CloudinaryCleanupScheduler {
 
 				if (newRetryCount >= 5) {
 					// Pushed to FAILED_PERMANENTLY for Option A (Admin Intervention)
-					file.setStatus("FAILED_PERMANENTLY");
+					file.setStatus(OrphanedFileStatus.FAILED_PERMANENTLY.name());
 					log.error("CRITICAL: Cloudinary deletion for '{}' permanently failed after 5 attempts.",
 							file.getPublicId());
 				} else {

@@ -13,12 +13,26 @@ import com.tgd.entity.ProductImage;
 @Repository
 public class ProductImageRepository {
 	private final ProductImageMapper productImageMapper;
-	
+
 	public Optional<ProductImage> getProductImageById(Long productImageId) {
 		Map<String, Object> param = new HashMap<>();
 		param.put("productImageId", productImageId);
-		
+
 		return productImageMapper.getProductImageById(param);
+	}
+	
+	public Optional<ProductImage> getSoftDeletedProductImageById(Long productImageId) {
+		Map<String, Object> param = new HashMap<>();
+		param.put("productImageId", productImageId);
+
+		return productImageMapper.getSoftDeletedProductImageById(param);
+	}
+	
+	public List<ProductImage> getSoftDeletedImagesByProductId(Long productId) {
+		Map<String, Object> param = new HashMap<>();
+		param.put("productId", productId);
+
+		return productImageMapper.getSoftDeletedImagesByProductId(param);
 	}
 
 	public Number createProductImage(ProductImage productImage) {
@@ -30,40 +44,33 @@ public class ProductImageRepository {
 		productImageMapper.createProductImage(param);
 		return (Number) param.get("id");
 	}
-	
+
 	public int softDeleteProductImage(Long productImageId) {
 		Map<String, Object> param = new HashMap<>();
 		param.put("productImageId", productImageId);
-		
+
 		return productImageMapper.softDeleteProductImage(param);
 	}
-	
+
 	public int softDeleteImagesByProductId(Long productId) {
 		Map<String, Object> param = new HashMap<>();
 		param.put("productId", productId);
-		
+
 		return productImageMapper.softDeleteImagesByProductId(param);
 	}
-	
+
 	public int hardDeleteProductImage(Long productImageId) {
 		Map<String, Object> param = new HashMap<>();
 		param.put("productImageId", productImageId);
-		
+
 		return productImageMapper.hardDeleteProductImage(param);
 	}
-	
+
 	public int hardDeleteImagesByProductId(Long productId) {
 		Map<String, Object> param = new HashMap<>();
 		param.put("productId", productId);
-		
+
 		return productImageMapper.hardDeleteImagesByProductId(param);
-	}
-	
-	public List<ProductImage> getAllImagesByProductId(Long productId){
-		Map<String, Object> param = new HashMap<>();
-		param.put("productId", productId);
-		
-		return productImageMapper.getAllImagesByProductId(param);
 	}
 
 	public ProductImageRepository(ProductImageMapper productImageMapper) {

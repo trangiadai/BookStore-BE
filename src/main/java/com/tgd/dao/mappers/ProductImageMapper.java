@@ -22,5 +22,7 @@ public interface ProductImageMapper {
 	
 	int hardDeleteImagesByProductId(Map<String, Object> param);
 	
-	List<ProductImage> getAllImagesByProductId(Map<String, Object> param);
+	Optional<ProductImage> getSoftDeletedProductImageById(Map<String, Object> param);
+	
+	List<ProductImage> getSoftDeletedImagesByProductId(Map<String, Object> param);
 }

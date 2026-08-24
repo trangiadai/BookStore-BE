@@ -6,14 +6,11 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.tgd.dao.mappers.OrphanedFileMapper;
 import com.tgd.dto.mappers.ProductMapperDTO;
 import com.tgd.dto.request.ProductRequestDTO;
 import com.tgd.dto.response.CategoryResponseDTO;
 import com.tgd.dto.response.ProductResponseDTO;
-import com.tgd.entity.OrphanedFile;
 import com.tgd.entity.Product;
-import com.tgd.entity.ProductImage;
 import com.tgd.repository.ProductRepository;
 
 @Service
@@ -21,7 +18,6 @@ public class ProductService {
 	private final ProductRepository productRepository;
 	private final ProductImageService productImageService;
 	private final CategoryService categoryService;
-	private final OrphanedFileMapper orphanedFileMapper;
 
 	@Transactional
 	public int softDeleteProduct(Long productId) {
@@ -33,20 +29,19 @@ public class ProductService {
 
 	@Transactional
 	public int hardDeleteProduct(Long productId) {
-		List<ProductImage> images = productImageService.getAllImagesByProductId(productId);
+		getSoftDeletedProductById(productId);
 
-		for (ProductImage img : images) {
-			if (img.getPublicId() != null) {
-				OrphanedFile file = new OrphanedFile();
-				file.setPublicId(img.getPublicId());
-				file.setStatus("PENDING");
-				file.setRetryCount(0);
-				orphanedFileMapper.insert(file);
-			}
-		}
+		int deletedImagesCount = productImageService.hardDeleteImagesByProductId(productId);
+		int deletedProductCount = productRepository.hardDeleteProduct(productId);
 
-		return productImageService.hardDeleteImagesByProductId(productId)
-				+ productRepository.hardDeleteProduct(productId);
+		return deletedImagesCount + deletedProductCount;
+	}
+
+	private Product getSoftDeletedProductById(Long id) {
+		Product product = productRepository.getSoftDeletedProductById(id).orElseThrow(
+				() -> new IllegalArgumentException("Not found in garbage collection the product with id: " + id));
+
+		return product;
 	}
 
 	public ProductResponseDTO getProductById(Long id) {
@@ -65,7 +60,7 @@ public class ProductService {
 	@Transactional
 	public ProductResponseDTO createProduct(ProductRequestDTO productRequest) {
 		categoryService.getCategoryById(productRequest.getCategoryId());
-		
+
 		Product product = ProductMapperDTO.toProduct(productRequest);
 		Long productId = productRepository.createProduct(product).longValue();
 
@@ -75,7 +70,7 @@ public class ProductService {
 	@Transactional
 	public ProductResponseDTO updateProduct(Long id, ProductRequestDTO productRequest) {
 		CategoryResponseDTO categoryResponse = categoryService.getCategoryById(productRequest.getCategoryId());
-		
+
 		Product product = ProductMapperDTO.toProduct(productRequest);
 		product.setId(id);
 		product.setCategoryName(categoryResponse.getName());
@@ -84,12 +79,11 @@ public class ProductService {
 		return ProductMapperDTO.toProductResponse(product);
 	}
 
-	public ProductService(ProductRepository productRepository, ProductImageService productImageService, CategoryService categoryService,
-			OrphanedFileMapper orphanedFileMapper) {
+	public ProductService(ProductRepository productRepository, ProductImageService productImageService,
+			CategoryService categoryService) {
 		super();
 		this.productRepository = productRepository;
 		this.productImageService = productImageService;
-		this.orphanedFileMapper = orphanedFileMapper;
 		this.categoryService = categoryService;
 	}
 

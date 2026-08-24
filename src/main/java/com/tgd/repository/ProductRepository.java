@@ -13,19 +13,26 @@ import com.tgd.entity.Product;
 @Repository
 public class ProductRepository {
 	private final ProductMapper productMapper;
-	
+
 	public Optional<Product> getProductById(Long id) {
 		Map<String, Object> param = new HashMap<>();
 		param.put("id", id);
-		
+
 		return productMapper.getProductById(param);
 	}
 
 	public List<Product> getAllProducts() {
-		
+
 		return productMapper.getAllProducts();
 	}
-	
+
+	public Optional<Product> getSoftDeletedProductById(Long id) {
+		Map<String, Object> param = new HashMap<>();
+		param.put("id", id);
+
+		return productMapper.getSoftDeletedProductById(param);
+	}
+
 	public Number createProduct(Product product) {
 		Map<String, Object> param = new HashMap<>();
 		param.put("name", product.getName());
@@ -35,10 +42,10 @@ public class ProductRepository {
 		param.put("description", product.getDescription());
 		param.put("categoryId", product.getCategoryId());
 		productMapper.createProduct(param);
-		
+
 		return (Number) param.get("id");
 	}
-	
+
 	public int updateProduct(Product product) {
 		Map<String, Object> param = new HashMap<>();
 		param.put("id", product.getId());
@@ -48,25 +55,23 @@ public class ProductRepository {
 		param.put("quantity", product.getQuantity());
 		param.put("description", product.getDescription());
 		param.put("categoryId", product.getCategoryId());
-		
+
 		return productMapper.updateProduct(param);
 	}
-	
+
 	public int softDeleteProduct(Long productId) {
 		Map<String, Object> param = new HashMap<>();
 		param.put("productId", productId);
-		
+
 		return productMapper.softDeleteProduct(param);
 	}
-	
+
 	public int hardDeleteProduct(Long productId) {
 		Map<String, Object> param = new HashMap<>();
 		param.put("productId", productId);
-		
+
 		return productMapper.hardDeleteProduct(param);
 	}
-	
-	
 
 	public ProductRepository(ProductMapper productMapper) {
 		super();
