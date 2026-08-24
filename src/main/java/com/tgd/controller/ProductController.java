@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -27,7 +28,8 @@ public class ProductController {
 	private final ProductService productService;
 
 	@GetMapping("/{id}")
-	public ProductResponseDTO getProductById(@PathVariable("id") @Positive(message = "Product ID must be greater than 0") Long id) {
+	public ProductResponseDTO getProductById(
+			@PathVariable("id") @Positive(message = "Product ID must be greater than 0") Long id) {
 		return productService.getProductById(id);
 	}
 
@@ -43,7 +45,8 @@ public class ProductController {
 	}
 
 	@PutMapping("/{id}")
-	public ProductResponseDTO updateProduct(@PathVariable("id") @Positive(message = "Product ID must be greater than 0") Long id,
+	public ProductResponseDTO updateProduct(
+			@PathVariable("id") @Positive(message = "Product ID must be greater than 0") Long id,
 			@Valid @RequestBody ProductRequestDTO productRequest) {
 		return productService.updateProduct(id, productRequest);
 	}
@@ -58,6 +61,11 @@ public class ProductController {
 	@DeleteMapping("/{id}/hard")
 	public int hardDeleteProduct(@PathVariable @Positive(message = "Product ID must be greater than 0") Long id) {
 		return productService.hardDeleteProduct(id);
+	}
+
+	@PatchMapping("/recover/{id}")
+	public int recoverProduct(@PathVariable @Positive(message = "Product ID must be positive") Long id) {
+		return productService.recoverProduct(id);
 	}
 
 	@GetMapping("/search")

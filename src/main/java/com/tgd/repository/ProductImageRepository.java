@@ -20,14 +20,14 @@ public class ProductImageRepository {
 
 		return productImageMapper.getProductImageById(param);
 	}
-	
+
 	public Optional<ProductImage> getSoftDeletedProductImageById(Long productImageId) {
 		Map<String, Object> param = new HashMap<>();
 		param.put("productImageId", productImageId);
 
 		return productImageMapper.getSoftDeletedProductImageById(param);
 	}
-	
+
 	public List<ProductImage> getSoftDeletedImagesByProductId(Long productId) {
 		Map<String, Object> param = new HashMap<>();
 		param.put("productId", productId);
@@ -71,6 +71,20 @@ public class ProductImageRepository {
 		param.put("productId", productId);
 
 		return productImageMapper.hardDeleteImagesByProductId(param);
+	}
+
+	public int recoverProductImage(Long productImageId) {
+		Map<String, Object> param = new HashMap<>();
+		param.put("productImageId", productImageId);
+
+		return productImageMapper.recoverProductImage(param);
+	}
+
+	public int recoverImagesByProductId(Long productId) {
+		Map<String, Object> param = new HashMap<>();
+		param.put("productId", productId);
+
+		return productImageMapper.recoverImagesByProductId(param);
 	}
 
 	public ProductImageRepository(ProductImageMapper productImageMapper) {

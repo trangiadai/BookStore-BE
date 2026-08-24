@@ -74,6 +74,13 @@ public class ProductRepository {
 		return productMapper.hardDeleteProduct(param);
 	}
 
+	public int recoverProduct(Long productId) {
+		Map<String, Object> param = new HashMap<>();
+		param.put("productId", productId);
+
+		return productMapper.recoverProduct(param);
+	}
+
 	public List<Product> searchSortFilterProducts(ProductSearchSortFilterDTO criteria) {
 		Map<String, Object> param = new HashMap<>();
 		param.put("name", criteria.getName());

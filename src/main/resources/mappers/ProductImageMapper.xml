@@ -85,5 +85,17 @@
 	    FROM product_images 
 	    WHERE id = #{productImageId} AND is_deleted = 1
 	</select>
+	
+	<update id="recoverProductImage">
+	    UPDATE product_images 
+	    SET is_deleted = 0, deleted_at = NULL 
+	    WHERE id = #{productImageId} AND is_deleted = 1
+	</update>
+
+	<update id="recoverImagesByProductId">
+	    UPDATE product_images 
+	    SET is_deleted = 0, deleted_at = NULL 
+	    WHERE product_id = #{productId} AND is_deleted = 1
+	</update>
 
 </mapper>

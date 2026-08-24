@@ -129,6 +129,20 @@ public class ProductImageService {
 		Map uploadResult = cloudinaryService.uploadFile(rawProductImage, "products");
 		return ProductImageMapperDTO.toProductImage(uploadResult);
 	}
+	
+	@Transactional
+	public int recoverProductImage(Long productImageId) {
+	    ProductImage softDeletedImage = getSoftDeletedProductImageById(productImageId);
+	    productRepository.getProductById(softDeletedImage.getProductId())
+	            .orElseThrow(() -> new IllegalArgumentException(
+	                    "Cannot recover image. Parent product ID " + softDeletedImage.getProductId() + " is soft-deleted or does not exist. Recover product first."));
+
+	    return productImageRepository.recoverProductImage(productImageId);
+	}
+
+	public int recoverImagesByProductId(Long productId) {
+	    return productImageRepository.recoverImagesByProductId(productId);
+	}
 
 	private void rollbackCloudinaryUploads(Set<ProductImage> images) {
 		for (ProductImage img : images) {

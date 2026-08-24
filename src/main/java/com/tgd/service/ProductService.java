@@ -80,6 +80,16 @@ public class ProductService {
 		return ProductMapperDTO.toProductResponse(product);
 	}
 
+	@Transactional
+	public int recoverProduct(Long productId) {
+		getSoftDeletedProductById(productId);
+
+		int recoveredProductCount = productRepository.recoverProduct(productId);
+		int recoveredImagesCount = productImageService.recoverImagesByProductId(productId);
+
+		return recoveredProductCount + recoveredImagesCount;
+	}
+
 	public List<ProductResponseDTO> searchSortFilterProducts(ProductSearchSortFilterDTO criteria) {
 		List<Product> products = productRepository.searchSortFilterProducts(criteria);
 

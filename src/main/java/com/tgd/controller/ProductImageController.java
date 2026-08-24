@@ -8,6 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,13 +49,20 @@ public class ProductImageController {
 	}
 
 	@DeleteMapping("/{productImageId}")
-	public int softDeleteProductImage(@PathVariable("productImageId") @Positive(message = "Image's id must be greater than 0") Long productImageId) {
+	public int softDeleteProductImage(
+			@PathVariable("productImageId") @Positive(message = "Image's id must be greater than 0") Long productImageId) {
 		return productImageService.softDeleteProductImage(productImageId);
 	}
 
 	@DeleteMapping("/{productImageId}/hard")
-	public int hardDeleteProductImage(@PathVariable("productImageId") @Positive(message = "Image's id must be greater than 0") Long productImageId) {
+	public int hardDeleteProductImage(
+			@PathVariable("productImageId") @Positive(message = "Image's id must be greater than 0") Long productImageId) {
 		return productImageService.hardDeleteProductImage(productImageId);
+	}
+
+	@PatchMapping("/recover/{imageId}")
+	public int recoverProductImage(@PathVariable @Positive(message = "Image ID must be positive") Long imageId) {
+		return productImageService.recoverProductImage(imageId);
 	}
 
 	public ProductImageController(ProductImageService productImageService) {

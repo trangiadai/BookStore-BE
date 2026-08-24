@@ -13,16 +13,18 @@ public interface ProductMapper {
 	List<Product> getAllProducts();
 
 	void createProduct(Map<String, Object> param);
-	
+
 	int updateProduct(Map<String, Object> param);
-	
+
 	Optional<Product> getProductById(Map<String, Object> param);
-	
+
 	int softDeleteProduct(Map<String, Object> param);
-	
+
 	int hardDeleteProduct(Map<String, Object> param);
-	
+
 	Optional<Product> getSoftDeletedProductById(Map<String, Object> param);
-	
+
+	int recoverProduct(Map<String, Object> param);
+
 	List<Product> searchSortFilterProducts(Map<String, Object> param);
 }
