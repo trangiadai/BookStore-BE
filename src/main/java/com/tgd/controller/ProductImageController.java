@@ -19,6 +19,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.tgd.entity.ProductImage;
 import com.tgd.service.ProductImageService;
 
+import jakarta.validation.constraints.Positive;
+
 @RestController
 @RequestMapping("/product-images")
 public class ProductImageController {
@@ -46,12 +48,12 @@ public class ProductImageController {
 	}
 
 	@DeleteMapping("/{productImageId}")
-	public int softDeleteProductImage(@PathVariable("productImageId") Long productImageId) {
+	public int softDeleteProductImage(@PathVariable("productImageId") @Positive(message = "Image's id must be greater than 0") Long productImageId) {
 		return productImageService.softDeleteProductImage(productImageId);
 	}
 
 	@DeleteMapping("/{productImageId}/hard")
-	public int hardDeleteProductImage(@PathVariable("productImageId") Long productImageId) {
+	public int hardDeleteProductImage(@PathVariable("productImageId") @Positive(message = "Image's id must be greater than 0") Long productImageId) {
 		return productImageService.hardDeleteProductImage(productImageId);
 	}
 

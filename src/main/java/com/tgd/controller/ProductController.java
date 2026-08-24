@@ -19,6 +19,7 @@ import com.tgd.dto.response.ProductResponseDTO;
 import com.tgd.service.ProductService;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 
 @RestController
 @RequestMapping("/products")
@@ -26,7 +27,7 @@ public class ProductController {
 	private final ProductService productService;
 
 	@GetMapping("/{id}")
-	public ProductResponseDTO getProductById(@PathVariable("id") Long id) {
+	public ProductResponseDTO getProductById(@PathVariable("id") @Positive(message = "Product ID must be greater than 0") Long id) {
 		return productService.getProductById(id);
 	}
 
@@ -42,20 +43,20 @@ public class ProductController {
 	}
 
 	@PutMapping("/{id}")
-	public ProductResponseDTO updateProduct(@PathVariable("id") Long id,
+	public ProductResponseDTO updateProduct(@PathVariable("id") @Positive(message = "Product ID must be greater than 0") Long id,
 			@Valid @RequestBody ProductRequestDTO productRequest) {
 		return productService.updateProduct(id, productRequest);
 	}
 
 	// DELETE /products/10 -> Soft Delete
 	@DeleteMapping("/{id}")
-	public int softDeleteProduct(@PathVariable Long id) {
+	public int softDeleteProduct(@PathVariable @Positive(message = "Product ID must be greater than 0") Long id) {
 		return productService.softDeleteProduct(id);
 	}
 
 	// DELETE /products/10/hard -> Hard Delete (Admin action)
 	@DeleteMapping("/{id}/hard")
-	public int hardDeleteProduct(@PathVariable Long id) {
+	public int hardDeleteProduct(@PathVariable @Positive(message = "Product ID must be greater than 0") Long id) {
 		return productService.hardDeleteProduct(id);
 	}
 

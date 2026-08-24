@@ -18,6 +18,7 @@ import com.tgd.dto.response.CategoryResponseDTO;
 import com.tgd.service.CategoryService;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 
 @RestController
 @RequestMapping("/categories")
@@ -30,7 +31,7 @@ public class CategoryController {
 	}
 
 	@GetMapping("/{id}")
-	public CategoryResponseDTO getCategoryById(@PathVariable Long id) {
+	public CategoryResponseDTO getCategoryById(@PathVariable @Positive(message = "Category's id must be greater than 0") Long id) {
 		return categoryService.getCategoryById(id);
 	}
 
@@ -47,7 +48,7 @@ public class CategoryController {
 	}
 
 	@DeleteMapping("/{id}")
-	public int deleteCategory(@PathVariable Long id) {
+	public int deleteCategory(@PathVariable @Positive(message = "Category's id must be greater than 0") Long id) {
 		return categoryService.deleteCategory(id);
 	}
 
