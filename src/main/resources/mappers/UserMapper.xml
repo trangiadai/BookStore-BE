@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tgd.dao.mappers.UserMapper">
+    <resultMap id="UserResultMap" type="com.tgd.entity.User">
+        <id property="id" column="id" />
+        <result property="accountId" column="account_id" />
+        <result property="fullName" column="full_name" />
+        <result property="phoneNumber" column="phone_number" />
+        <result property="address" column="address" />
+    </resultMap>
+
+    <select id="getUserByPhone" parameterType="map" resultMap="UserResultMap">
+        SELECT 
+            id, 
+            account_id, 
+            full_name, 
+            phone_number, 
+            address
+        FROM users
+        WHERE phone_number = #{phone}
+    </select>
+    
+    <select id="getUserByAccountId" parameterType="map" resultMap="UserResultMap">
+        SELECT id, account_id, full_name, phone_number, address
+        FROM users
+        WHERE account_id = #{accountId}
+    </select>
+
+    <select id="getAllUsers" resultMap="UserResultMap">
+        SELECT id, account_id, full_name, phone_number, address
+        FROM users
+    </select>
+    
+    <update id="updateUser" parameterType="map">
+	    UPDATE users
+	    SET full_name = #{fullName},
+	        phone_number = #{phoneNumber},
+	        address = #{address}
+	    WHERE account_id = #{accountId}
+	</update>
+
+    <insert id="createUser" parameterType="map" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO users (
+            account_id, 
+            full_name, 
+            phone_number, 
+            address
+        ) VALUES (
+            #{accountId}, 
+            #{fullName}, 
+            #{phoneNumber}, 
+            #{address}
+        )
+    </insert>
+
+</mapper>

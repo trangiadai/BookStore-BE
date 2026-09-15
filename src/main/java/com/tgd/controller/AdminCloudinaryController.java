@@ -51,5 +51,4 @@ public class AdminCloudinaryController {
 		super();
 		this.adminService = adminService;
 	}
-
 }

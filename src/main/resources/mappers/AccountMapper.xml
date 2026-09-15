@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tgd.dao.mappers.AccountMapper">
+
+    <!-- Result map matching accounts table schema to Account entity -->
+    <resultMap id="AccountResultMap" type="com.tgd.entity.Account">
+        <id property="id" column="id" />
+        <result property="email" column="email" />
+        <result property="passwordHash" column="password_hash" />
+        <result property="role" column="role" />
+        <result property="enabled" column="is_enabled" />
+        <result property="createdAt" column="created_at" />
+        <result property="updatedAt" column="updated_at" />
+    </resultMap>
+
+    <!-- Query account by email -->
+    <select id="getAccountByEmail" parameterType="map" resultMap="AccountResultMap">
+        SELECT 
+            id, 
+            email, 
+            password_hash, 
+            role, 
+            is_enabled, 
+            created_at, 
+            updated_at
+        FROM accounts
+        WHERE email = #{email}
+    </select>
+
+    <!-- Insert new account using generated key support -->
+    <insert id="createAccount" parameterType="map" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO accounts (
+            email, 
+            password_hash, 
+            role, 
+            is_enabled
+        ) VALUES (
+            #{email}, 
+            #{passwordHash}, 
+            #{role}, 
+            #{enabled}
+        )
+    </insert>
+
+</mapper>
