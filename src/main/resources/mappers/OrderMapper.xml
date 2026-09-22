@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tgd.dao.mappers.OrderMapper">
+
+    <resultMap id="OrderDetailResultMap" type="com.tgd.entity.payment.Order">
+        <id property="id" column="order_id" />
+        <result property="accountId" column="account_id" />
+        <result property="orderCode" column="order_code" />
+        <result property="subtotalAmount" column="subtotal_amount" />
+        <result property="shippingFee" column="shipping_fee" />
+        <result property="totalAmount" column="total_amount" />
+        <result property="orderStatus" column="order_status" />
+        <result property="paymentStatus" column="payment_status" />
+        <result property="paymentMethod" column="payment_method" />
+        <result property="shippingFullName" column="shipping_full_name" />
+        <result property="shippingPhoneNumber" column="shipping_phone_number" />
+        <result property="shippingAddress" column="shipping_address" />
+        <result property="createdAt" column="created_at" />
+        <result property="updatedAt" column="updated_at" />
+
+        <collection property="items" ofType="com.tgd.entity.payment.OrderItem">
+            <id property="id" column="item_id" />
+            <result property="orderId" column="order_id" />
+            <result property="productId" column="product_id" />
+            <result property="productName" column="product_name" />
+            <result property="unitPrice" column="unit_price" />
+            <result property="quantity" column="quantity" />
+            <result property="subtotal" column="subtotal" />
+        </collection>
+    </resultMap>
+
+	<insert id="createOrder" parameterType="map" useGeneratedKeys="true" keyProperty="id">
+	    INSERT INTO orders (
+	        account_id,
+	        order_code,
+	        subtotal_amount,
+	        shipping_fee,
+	        total_amount,
+	        order_status,
+	        payment_status,
+	        payment_method,
+	        shipping_full_name,
+	        shipping_phone_number,
+	        shipping_address
+	    ) VALUES (
+	        #{accountId},
+	        #{orderCode},
+	        #{subtotalAmount},
+	        #{shippingFee},
+	        #{totalAmount},
+	        #{orderStatus},
+	        #{paymentStatus},
+	        #{paymentMethod},
+	        #{shippingFullName},
+	        #{shippingPhoneNumber},
+	        #{shippingAddress}
+	    )
+	</insert>
+
+    <insert id="createOrderItems" parameterType="map">
+	    INSERT INTO order_items (
+	        order_id,
+	        product_id,
+	        product_name,
+	        unit_price,
+	        quantity,
+	        subtotal
+	    ) VALUES
+	    <foreach collection="items" item="item" separator=",">
+	        (
+	            #{item.orderId},
+	            #{item.productId},
+	            #{item.productName},
+	            #{item.unitPrice},
+	            #{item.quantity},
+	            #{item.subtotal}
+	        )
+	    </foreach>
+	</insert>
+
+    <select id="getOrdersByAccountId" parameterType="map" resultMap="OrderDetailResultMap">
+        SELECT 
+            id AS order_id,
+            account_id,
+            order_code,
+            subtotal_amount,
+            shipping_fee,
+            total_amount,
+            order_status,
+            payment_status,
+            payment_method,
+            shipping_full_name,
+            shipping_phone_number,
+            shipping_address,
+            created_at,
+            updated_at
+        FROM orders
+        WHERE account_id = #{accountId}
+        ORDER BY created_at DESC
+    </select>
+
+    <select id="getOrderByIdAndAccountId" parameterType="map" resultMap="OrderDetailResultMap">
+        SELECT 
+            o.id AS order_id,
+            o.account_id,
+            o.order_code,
+            o.subtotal_amount,
+            o.shipping_fee,
+            o.total_amount,
+            o.order_status,
+            o.payment_status,
+            o.payment_method,
+            o.shipping_full_name,
+            o.shipping_phone_number,
+            o.shipping_address,
+            o.created_at,
+            o.updated_at,
+            oi.id AS item_id,
+            oi.product_id,
+            oi.product_name,
+            oi.unit_price,
+            oi.quantity,
+            oi.subtotal
+        FROM orders o
+        LEFT JOIN order_items oi ON o.id = oi.order_id
+        WHERE 
+        	o.id = #{orderId} 
+	        <if test="accountId != null">
+	        	AND o.account_id = #{accountId}
+	    	</if>
+    </select>
+    
+    <update id="updateOrderStatus" parameterType="map">
+	    UPDATE orders
+	    SET 
+	        order_status = #{orderStatus},
+	        payment_status = #{paymentStatus},
+	        updated_at = NOW()
+	    WHERE id = #{orderId}
+	</update>
+	
+	<select id="searchOrdersByAdmin" parameterType="map" resultMap="OrderDetailResultMap">
+	    SELECT 
+	        o.id AS order_id,
+	        o.account_id,
+	        o.order_code,
+	        o.subtotal_amount,
+	        o.shipping_fee,
+	        o.total_amount,
+	        o.order_status,
+	        o.payment_status,
+	        o.payment_method,
+	        o.shipping_full_name,
+	        o.shipping_phone_number,
+	        o.shipping_address,
+	        o.created_at,
+	        o.updated_at
+	    FROM orders o
+	    <where>
+	        <if test="keyword != null and keyword != ''">
+	            (LOWER(o.shipping_full_name) LIKE LOWER(CONCAT('%', #{keyword}, '%'))
+	             OR o.shipping_phone_number LIKE CONCAT('%', #{keyword}, '%'))
+	        </if>
+	        <if test="orderStatus != null">
+	            AND o.order_status = #{orderStatus}
+	        </if>
+	        <if test="paymentStatus != null">
+	            AND o.payment_status = #{paymentStatus}
+	        </if>
+	    </where>
+	    <choose>
+	        <when test="sortDirection != null and sortDirection.name() == 'ASC'">
+	            ORDER BY o.created_at ASC
+	        </when>
+	        <otherwise>
+	            ORDER BY o.created_at DESC
+	        </otherwise>
+	    </choose>
+	</select>
+
+</mapper>

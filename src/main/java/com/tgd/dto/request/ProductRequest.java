@@ -11,7 +11,7 @@ import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 
-public class ProductRequestDTO {
+public class ProductRequest {
 
 	@NotBlank(message = "The product name can't be empty or spaces/tabs")
 	@Size(max = 100, min = 2, message = "The maximun length of product name is 100 characters, and the minimun is 2 characters")
@@ -43,7 +43,7 @@ public class ProductRequestDTO {
 	@Positive(message = "The product's category ID must be the positive number")
 	private Long categoryId;
 
-	public ProductRequestDTO(String name, BigDecimal importPrice, BigDecimal sellingPrice, Integer quantity,
+	public ProductRequest(String name, BigDecimal importPrice, BigDecimal sellingPrice, Integer quantity,
 			String description, Long categoryId) {
 		super();
 		this.name = name;
@@ -54,7 +54,7 @@ public class ProductRequestDTO {
 		this.categoryId = categoryId;
 	}
 
-	public ProductRequestDTO() {
+	public ProductRequest() {
 		super();
 		// TODO Auto-generated constructor stub
 	}

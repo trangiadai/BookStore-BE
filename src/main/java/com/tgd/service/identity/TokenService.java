@@ -12,7 +12,7 @@ import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.stereotype.Service;
 
 import com.tgd.dto.request.identity.IntrospectRequest;
-import com.tgd.dto.response.IntrospectResponse;
+import com.tgd.dto.response.identity.IntrospectResponse;
 
 import java.time.Instant;
 import java.util.UUID;

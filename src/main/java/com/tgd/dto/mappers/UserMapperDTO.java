@@ -1,6 +1,6 @@
 package com.tgd.dto.mappers;
 
-import com.tgd.dto.response.UserResponse;
+import com.tgd.dto.response.identity.UserResponse;
 import com.tgd.entity.User;
 
 public class UserMapperDTO {

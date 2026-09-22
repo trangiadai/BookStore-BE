@@ -113,7 +113,7 @@
 	    WHERE id = #{productId} AND is_deleted = 1
 	</update>
 	
-	<select id="searchSortFilterProducts" resultMap="ProductResultMap" parameterType="com.tgd.dto.request.ProductSearchSortFilterDTO">
+	<select id="searchSortFilterProducts" resultMap="ProductResultMap" parameterType="com.tgd.dto.request.ProductSearchSortFilterRequest">
 	    SELECT 
 	        <include refid="ProductColumns" />,
 	        <include refid="ProductImageColumns" />
@@ -150,5 +150,13 @@
 	        ORDER BY ${sortBy.columnName} ${sortDirection.name()}
 	    </if>
 	</select>
+	
+	<update id="decreaseStock" parameterType="map">
+	    UPDATE products
+	    SET quantity = quantity - #{quantity}
+	    WHERE id = #{productId} 
+	      AND is_deleted = 0 
+	      AND quantity >= #{quantity}
+	</update>
 
 </mapper>

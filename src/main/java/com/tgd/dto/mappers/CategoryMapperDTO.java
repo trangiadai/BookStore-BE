@@ -1,16 +1,16 @@
 package com.tgd.dto.mappers;
 
-import com.tgd.dto.request.CategoryRequestDTO;
-import com.tgd.dto.response.CategoryResponseDTO;
+import com.tgd.dto.request.CategoryRequest;
+import com.tgd.dto.response.CategoryResponse;
 import com.tgd.entity.Category;
 
 public class CategoryMapperDTO {
-	public static CategoryResponseDTO toCategoryResponse(Category category) {
+	public static CategoryResponse toCategoryResponse(Category category) {
 		if (category == null) {
 			return null;
 		}
 
-		CategoryResponseDTO categoryResponse = new CategoryResponseDTO();
+		CategoryResponse categoryResponse = new CategoryResponse();
 		categoryResponse.setId(category.getId());
 		categoryResponse.setName(category.getName());
 		categoryResponse.setDescription(category.getDescription());
@@ -20,7 +20,7 @@ public class CategoryMapperDTO {
 		return categoryResponse;
 	}
 
-	public static Category toCategory(CategoryRequestDTO categoryRequest) {
+	public static Category toCategory(CategoryRequest categoryRequest) {
 		if (categoryRequest == null) {
 			return null;
 		}

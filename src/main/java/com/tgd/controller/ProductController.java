@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.tgd.dto.request.ProductRequestDTO;
-import com.tgd.dto.request.ProductSearchSortFilterDTO;
-import com.tgd.dto.response.ProductResponseDTO;
+import com.tgd.dto.request.ProductRequest;
+import com.tgd.dto.request.ProductSearchSortFilterRequest;
+import com.tgd.dto.response.ProductResponse;
 import com.tgd.service.ProductService;
 
 import jakarta.validation.Valid;
@@ -28,26 +28,26 @@ public class ProductController {
 	private final ProductService productService;
 
 	@GetMapping("/{id}")
-	public ProductResponseDTO getProductById(
+	public ProductResponse getProductById(
 			@PathVariable("id") @Positive(message = "Product ID must be greater than 0") Long id) {
 		return productService.getProductById(id);
 	}
 
 	@GetMapping
-	public List<ProductResponseDTO> getAllProducts() {
+	public List<ProductResponse> getAllProducts() {
 		return productService.getAllProducts();
 	}
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public ProductResponseDTO createProduct(@Valid @RequestBody ProductRequestDTO productRequest) {
+	public ProductResponse createProduct(@Valid @RequestBody ProductRequest productRequest) {
 		return productService.createProduct(productRequest);
 	}
 
 	@PutMapping("/{id}")
-	public ProductResponseDTO updateProduct(
+	public ProductResponse updateProduct(
 			@PathVariable("id") @Positive(message = "Product ID must be greater than 0") Long id,
-			@Valid @RequestBody ProductRequestDTO productRequest) {
+			@Valid @RequestBody ProductRequest productRequest) {
 		return productService.updateProduct(id, productRequest);
 	}
 
@@ -69,7 +69,7 @@ public class ProductController {
 	}
 
 	@GetMapping("/search")
-	public List<ProductResponseDTO> searchSortFilterProducts(@Valid ProductSearchSortFilterDTO criteria) {
+	public List<ProductResponse> searchSortFilterProducts(@Valid ProductSearchSortFilterRequest criteria) {
 		return productService.searchSortFilterProducts(criteria);
 	}
 

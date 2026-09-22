@@ -9,8 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.tgd.dto.mappers.UserMapperDTO;
 import com.tgd.dto.request.identity.RegisterRequest;
-import com.tgd.dto.request.identity.UserRequestDTO;
-import com.tgd.dto.response.UserResponse;
+import com.tgd.dto.request.identity.UserRequest;
+import com.tgd.dto.response.identity.UserResponse;
 import com.tgd.entity.User;
 import com.tgd.repository.UserRepository;
 
@@ -55,7 +55,7 @@ public class UserService {
 	}
 
 	@Transactional
-	public UserResponse updateMyProfile(Jwt jwt, UserRequestDTO request) {
+	public UserResponse updateMyProfile(Jwt jwt, UserRequest request) {
 		if (jwt == null || jwt.getSubject() == null) {
 			throw new IllegalArgumentException("Invalid token payload");
 		}

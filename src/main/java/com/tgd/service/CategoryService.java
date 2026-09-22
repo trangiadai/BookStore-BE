@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.tgd.dto.mappers.CategoryMapperDTO;
-import com.tgd.dto.request.CategoryRequestDTO;
-import com.tgd.dto.response.CategoryResponseDTO;
+import com.tgd.dto.request.CategoryRequest;
+import com.tgd.dto.response.CategoryResponse;
 import com.tgd.entity.Category;
 import com.tgd.repository.CategoryRepository;
 
@@ -17,26 +17,26 @@ import com.tgd.repository.CategoryRepository;
 public class CategoryService {
 	private final CategoryRepository categoryRepository;
 
-	public List<CategoryResponseDTO> getAllCategories() {
+	public List<CategoryResponse> getAllCategories() {
 		return categoryRepository.getAllCategories().stream().map(CategoryMapperDTO::toCategoryResponse)
 				.collect(Collectors.toList());
 	}
 
-	public CategoryResponseDTO getCategoryById(Long id) {
+	public CategoryResponse getCategoryById(Long id) {
 		Category category = categoryRepository.getCategoryById(id)
 				.orElseThrow(() -> new IllegalArgumentException("Category not found with ID: " + id));
 
 		return CategoryMapperDTO.toCategoryResponse(category);
 	}
 
-	public List<CategoryResponseDTO> getCategoryByName(String name) {
+	public List<CategoryResponse> getCategoryByName(String name) {
 		List<Category> categories = categoryRepository.getCategoryByName(name);
 
 		return categories.stream().map(CategoryMapperDTO::toCategoryResponse).collect(Collectors.toList());
 	}
 
 	@Transactional
-	public CategoryResponseDTO createCategory(CategoryRequestDTO categoryRequest) {
+	public CategoryResponse createCategory(CategoryRequest categoryRequest) {
 		Category category = CategoryMapperDTO.toCategory(categoryRequest);
 		category.setId(categoryRepository.createCategory(category).longValue());
 
@@ -44,7 +44,7 @@ public class CategoryService {
 	}
 
 	@Transactional
-	public CategoryResponseDTO updateCategory(Long id, CategoryRequestDTO requestDTO) {
+	public CategoryResponse updateCategory(Long id, CategoryRequest requestDTO) {
 		Category existingCategory = categoryRepository.getCategoryById(id)
 				.orElseThrow(() -> new IllegalArgumentException("Category not found with ID: " + id));
 

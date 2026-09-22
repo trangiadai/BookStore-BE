@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tgd.dao.mappers.CartMapper">
+
+    <resultMap id="CartWithItemsMap" type="com.tgd.entity.payment.Cart">
+        <id property="id" column="cart_id" />
+        <result property="accountId" column="account_id" />
+        <collection property="items" ofType="com.tgd.entity.payment.CartItem" notNullColumn="item_id">
+            <id property="id" column="item_id" />
+            <result property="cartId" column="cart_id" />
+            <result property="productId" column="product_id" />
+            <result property="quantity" column="quantity" />
+        </collection>
+    </resultMap>
+    
+    <select id="getCartByAccountId" parameterType="map" resultMap="CartWithItemsMap">
+        SELECT 
+            c.id AS cart_id,
+            c.account_id,
+            ci.id AS item_id,
+            ci.product_id,
+            ci.quantity
+        FROM carts c
+        LEFT JOIN cart_items ci ON c.id = ci.cart_id
+        WHERE c.account_id = #{accountId}
+    </select>
+
+    <insert id="createCart" parameterType="map" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO carts (account_id) VALUES (#{accountId})
+    </insert>
+
+    <insert id="upsertCartItem" parameterType="map">
+        INSERT INTO cart_items (cart_id, product_id, quantity)
+        VALUES (
+			#{cartId}, 
+			#{productId}, 
+			#{quantity}
+		)
+        ON DUPLICATE KEY UPDATE quantity = quantity + VALUES(quantity)
+    </insert>
+
+    <delete id="removeCartItem" parameterType="map">
+        DELETE FROM cart_items 
+        WHERE cart_id = #{cartId} AND product_id = #{productId}
+    </delete>
+    
+	<update id="updateCartItemQuantity" parameterType="map">
+        UPDATE cart_items 
+        SET quantity = #{quantity}
+        WHERE cart_id = #{cartId} AND product_id = #{productId}
+    </update>
+
+    <delete id="clearCartItems" parameterType="map">
+        DELETE FROM cart_items 
+        WHERE cart_id = #{cartId}
+    </delete>
+
+</mapper>

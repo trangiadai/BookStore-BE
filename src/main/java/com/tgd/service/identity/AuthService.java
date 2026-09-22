@@ -8,8 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.tgd.dto.request.identity.AuthRequest;
 import com.tgd.dto.request.identity.IntrospectRequest;
 import com.tgd.dto.request.identity.RegisterRequest;
-import com.tgd.dto.response.AuthResponse;
-import com.tgd.dto.response.IntrospectResponse;
+import com.tgd.dto.response.identity.AuthResponse;
+import com.tgd.dto.response.identity.IntrospectResponse;
 import com.tgd.entity.Account;
 
 @Service

@@ -16,7 +16,7 @@ import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 
-public class ProductSearchSortFilterDTO {
+public class ProductSearchSortFilterRequest {
 	@Size(max = 100, message = "Search term cannot exceed 100 characters")
 	private String name;
 
@@ -63,7 +63,7 @@ public class ProductSearchSortFilterDTO {
         return !createdFrom.isAfter(createdTo);
     }
 
-	public ProductSearchSortFilterDTO(String name, Long categoryId, BigDecimal minPrice, BigDecimal maxPrice,
+	public ProductSearchSortFilterRequest(String name, Long categoryId, BigDecimal minPrice, BigDecimal maxPrice,
 			LocalDateTime createdFrom, LocalDateTime createdTo, SortField sortBy, SortDirection sortDirection) {
 		super();
 		this.name = name;
@@ -76,7 +76,7 @@ public class ProductSearchSortFilterDTO {
 		this.sortDirection = sortDirection;
 	}
 
-	public ProductSearchSortFilterDTO() {
+	public ProductSearchSortFilterRequest() {
 		super();
 		// TODO Auto-generated constructor stub
 	}

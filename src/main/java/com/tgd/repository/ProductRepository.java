@@ -8,7 +8,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Repository;
 
 import com.tgd.dao.mappers.ProductMapper;
-import com.tgd.dto.request.ProductSearchSortFilterDTO;
+import com.tgd.dto.request.ProductSearchSortFilterRequest;
 import com.tgd.entity.Product;
 
 @Repository
@@ -81,7 +81,7 @@ public class ProductRepository {
 		return productMapper.recoverProduct(param);
 	}
 
-	public List<Product> searchSortFilterProducts(ProductSearchSortFilterDTO criteria) {
+	public List<Product> searchSortFilterProducts(ProductSearchSortFilterRequest criteria) {
 		Map<String, Object> param = new HashMap<>();
 		param.put("name", criteria.getName());
 		param.put("categoryId", criteria.getCategoryId());
@@ -94,6 +94,14 @@ public class ProductRepository {
 
 		return productMapper.searchSortFilterProducts(param);
 	}
+	
+	public int decreaseStock(Long productId, Integer quantity) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("productId", productId);
+        params.put("quantity", quantity);
+        
+        return productMapper.decreaseStock(params);
+    }
 
 	public ProductRepository(ProductMapper productMapper) {
 		super();

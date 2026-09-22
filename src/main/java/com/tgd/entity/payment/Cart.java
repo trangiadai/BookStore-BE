@@ -1,25 +1,25 @@
-package com.tgd.dto.response;
+package com.tgd.entity.payment;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
-public class CategoryResponseDTO {
+public class Cart {
 	private Long id;
-	private String name;
-	private String description;
+	private Long accountId;
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
+	private List<CartItem> items;
 
-	public CategoryResponseDTO(Long id, String name, String description, LocalDateTime createdAt,
-			LocalDateTime updatedAt) {
+	public Cart(Long id, Long accountId, LocalDateTime createdAt, LocalDateTime updatedAt, List<CartItem> items) {
 		super();
 		this.id = id;
-		this.name = name;
-		this.description = description;
+		this.accountId = accountId;
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
+		this.items = items;
 	}
 
-	public CategoryResponseDTO() {
+	public Cart() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
@@ -32,20 +32,12 @@ public class CategoryResponseDTO {
 		this.id = id;
 	}
 
-	public String getName() {
-		return name;
+	public Long getAccountId() {
+		return accountId;
 	}
 
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
+	public void setAccountId(Long accountId) {
+		this.accountId = accountId;
 	}
 
 	public LocalDateTime getCreatedAt() {
@@ -64,4 +56,11 @@ public class CategoryResponseDTO {
 		this.updatedAt = updatedAt;
 	}
 
+	public List<CartItem> getItems() {
+		return items;
+	}
+
+	public void setItems(List<CartItem> items) {
+		this.items = items;
+	}
 }

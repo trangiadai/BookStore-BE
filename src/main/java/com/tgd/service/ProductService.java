@@ -7,10 +7,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.tgd.dto.mappers.ProductMapperDTO;
-import com.tgd.dto.request.ProductRequestDTO;
-import com.tgd.dto.request.ProductSearchSortFilterDTO;
-import com.tgd.dto.response.CategoryResponseDTO;
-import com.tgd.dto.response.ProductResponseDTO;
+import com.tgd.dto.request.ProductRequest;
+import com.tgd.dto.request.ProductSearchSortFilterRequest;
+import com.tgd.dto.response.CategoryResponse;
+import com.tgd.dto.response.ProductResponse;
 import com.tgd.entity.Product;
 import com.tgd.repository.ProductRepository;
 
@@ -45,21 +45,21 @@ public class ProductService {
 		return product;
 	}
 
-	public ProductResponseDTO getProductById(Long id) {
+	public ProductResponse getProductById(Long id) {
 		Product product = productRepository.getProductById(id)
 				.orElseThrow(() -> new IllegalArgumentException("Not found active product with id: " + id));
 
 		return ProductMapperDTO.toProductResponse(product);
 	}
 
-	public List<ProductResponseDTO> getAllProducts() {
+	public List<ProductResponse> getAllProducts() {
 		List<Product> products = productRepository.getAllProducts();
 
 		return products.stream().map(ProductMapperDTO::toProductResponse).collect(Collectors.toList());
 	}
 
 	@Transactional
-	public ProductResponseDTO createProduct(ProductRequestDTO productRequest) {
+	public ProductResponse createProduct(ProductRequest productRequest) {
 		categoryService.getCategoryById(productRequest.getCategoryId());
 
 		Product product = ProductMapperDTO.toProduct(productRequest);
@@ -69,8 +69,8 @@ public class ProductService {
 	}
 
 	@Transactional
-	public ProductResponseDTO updateProduct(Long id, ProductRequestDTO productRequest) {
-		CategoryResponseDTO categoryResponse = categoryService.getCategoryById(productRequest.getCategoryId());
+	public ProductResponse updateProduct(Long id, ProductRequest productRequest) {
+		CategoryResponse categoryResponse = categoryService.getCategoryById(productRequest.getCategoryId());
 
 		Product product = ProductMapperDTO.toProduct(productRequest);
 		product.setId(id);
@@ -90,10 +90,27 @@ public class ProductService {
 		return recoveredProductCount + recoveredImagesCount;
 	}
 
-	public List<ProductResponseDTO> searchSortFilterProducts(ProductSearchSortFilterDTO criteria) {
+	public List<ProductResponse> searchSortFilterProducts(ProductSearchSortFilterRequest criteria) {
 		List<Product> products = productRepository.searchSortFilterProducts(criteria);
 
 		return products.stream().map(ProductMapperDTO::toProductResponse).collect(Collectors.toList());
+	}
+
+	@Transactional
+	public void decreaseStock(Long productId, Integer quantity) {
+		if (quantity == null || quantity <= 0) {
+			throw new IllegalArgumentException("Quantity to decrease must be greater than zero");
+		}
+
+		// Verify active product exists first
+		getProductById(productId);
+
+		int rowsAffected = productRepository.decreaseStock(productId, quantity);
+
+		if (rowsAffected == 0) {
+			throw new IllegalArgumentException(
+					"Failed to decrease stock for product ID: " + productId + ". Insufficient stock available.");
+		}
 	}
 
 	public ProductService(ProductRepository productRepository, ProductImageService productImageService,

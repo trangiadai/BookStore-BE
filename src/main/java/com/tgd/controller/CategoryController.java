@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.tgd.dto.request.CategoryRequestDTO;
-import com.tgd.dto.response.CategoryResponseDTO;
+import com.tgd.dto.request.CategoryRequest;
+import com.tgd.dto.response.CategoryResponse;
 import com.tgd.service.CategoryService;
 
 import jakarta.validation.Valid;
@@ -29,31 +29,31 @@ public class CategoryController {
 	private final CategoryService categoryService;
 
 	@GetMapping
-	public List<CategoryResponseDTO> getAllCategories() {
+	public List<CategoryResponse> getAllCategories() {
 		return categoryService.getAllCategories();
 	}
 
 	@GetMapping("/{id}")
-	public CategoryResponseDTO getCategoryById(
+	public CategoryResponse getCategoryById(
 			@PathVariable @Positive(message = "Category's id must be greater than 0") Long id) {
 		return categoryService.getCategoryById(id);
 	}
 
 	@GetMapping("/search")
-	public List<CategoryResponseDTO> getCategoryByName(
+	public List<CategoryResponse> getCategoryByName(
 			@RequestParam @NotBlank(message = "Category name cannot be blank") @Size(max = 100, message = "The maximun length of category's name is 100") String name) {
 		return categoryService.getCategoryByName(name);
 	}
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public CategoryResponseDTO createCategory(@Valid @RequestBody CategoryRequestDTO requestDTO) {
+	public CategoryResponse createCategory(@Valid @RequestBody CategoryRequest requestDTO) {
 		return categoryService.createCategory(requestDTO);
 	}
 
 	@PutMapping("/{id}")
-	public CategoryResponseDTO updateCategory(@PathVariable Long id,
-			@Valid @RequestBody CategoryRequestDTO requestDTO) {
+	public CategoryResponse updateCategory(@PathVariable Long id,
+			@Valid @RequestBody CategoryRequest requestDTO) {
 		return categoryService.updateCategory(id, requestDTO);
 	}
 

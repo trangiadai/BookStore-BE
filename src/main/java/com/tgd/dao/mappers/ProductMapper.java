@@ -27,4 +27,6 @@ public interface ProductMapper {
 	int recoverProduct(Map<String, Object> param);
 
 	List<Product> searchSortFilterProducts(Map<String, Object> param);
+	
+	int decreaseStock(Map<String, Object> params);
 }

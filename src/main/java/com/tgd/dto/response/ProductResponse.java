@@ -6,7 +6,7 @@ import java.util.Set;
 
 import com.tgd.entity.ProductImage;
 
-public class ProductResponseDTO {
+public class ProductResponse {
 	private Long id;
 	private String name;
 	private BigDecimal importPrice;
@@ -18,7 +18,7 @@ public class ProductResponseDTO {
 	private Set<ProductImage> productImages;
 	private LocalDateTime createdAt;
 
-	public ProductResponseDTO(Long id, String name, String productCategory, BigDecimal importPrice,
+	public ProductResponse(Long id, String name, String productCategory, BigDecimal importPrice,
 			BigDecimal sellingPrice, Integer quantity, String description, Long categoryId, String categoryName,
 			Set<ProductImage> productImages, LocalDateTime createdAt) {
 		super();
@@ -114,7 +114,7 @@ public class ProductResponseDTO {
 		this.createdAt = createdAt;
 	}
 
-	public ProductResponseDTO() {
+	public ProductResponse() {
 		super();
 		// TODO Auto-generated constructor stub
 	}

@@ -1,17 +1,17 @@
 package com.tgd.dto.mappers;
 
-import com.tgd.dto.request.ProductRequestDTO;
-import com.tgd.dto.response.ProductResponseDTO;
+import com.tgd.dto.request.ProductRequest;
+import com.tgd.dto.response.ProductResponse;
 import com.tgd.entity.Product;
 
 public class ProductMapperDTO {
 
-	public static ProductResponseDTO toProductResponse(Product product) {
+	public static ProductResponse toProductResponse(Product product) {
 		if (product == null) {
 			return null;
 		}
 
-		ProductResponseDTO productReponse = new ProductResponseDTO();
+		ProductResponse productReponse = new ProductResponse();
 		productReponse.setId(product.getId());
 		productReponse.setName(product.getName());
 		productReponse.setImportPrice(product.getImportPrice());
@@ -26,7 +26,7 @@ public class ProductMapperDTO {
 		return productReponse;
 	}
 
-	public static Product toProduct(ProductRequestDTO productRequest) {
+	public static Product toProduct(ProductRequest productRequest) {
 		if (productRequest == null) {
 			return null;
 		}

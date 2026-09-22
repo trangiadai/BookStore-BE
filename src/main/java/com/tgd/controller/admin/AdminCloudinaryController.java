@@ -1,4 +1,4 @@
-package com.tgd.controller;
+package com.tgd.controller.admin;
 
 import java.util.List;
 

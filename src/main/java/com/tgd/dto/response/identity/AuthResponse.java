@@ -1,4 +1,4 @@
-package com.tgd.dto.response;
+package com.tgd.dto.response.identity;
 
 public class AuthResponse {
 	private String accessToken;

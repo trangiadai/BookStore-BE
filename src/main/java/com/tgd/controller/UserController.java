@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.tgd.dto.request.identity.UserRequestDTO;
-import com.tgd.dto.response.UserResponse;
+import com.tgd.dto.request.identity.UserRequest;
+import com.tgd.dto.response.identity.UserResponse;
 import com.tgd.service.identity.UserService;
 
 import jakarta.validation.Valid;
@@ -38,7 +38,7 @@ public class UserController {
 	}
 
 	@PutMapping("/profile")
-	public UserResponse updateMyProfile(@AuthenticationPrincipal Jwt jwt, @Valid @RequestBody UserRequestDTO request) {
+	public UserResponse updateMyProfile(@AuthenticationPrincipal Jwt jwt, @Valid @RequestBody UserRequest request) {
 		return userService.updateMyProfile(jwt, request);
 	}
 

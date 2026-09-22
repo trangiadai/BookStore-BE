@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
-public class UserRequestDTO {
+public class UserRequest {
 	@NotBlank(message = "Full name cannot be blank")
 	@Size(max = 100, message = "The maximum length of full name is 100")
 	private String fullName;
@@ -18,12 +18,12 @@ public class UserRequestDTO {
 	@Size(min = 3, max = 1000, message = "Address must be between 3 and 1000 characters")
 	private String address;
 
-	public UserRequestDTO() {
+	public UserRequest() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public UserRequestDTO(String fullName, String phoneNumber, String address) {
+	public UserRequest(String fullName, String phoneNumber, String address) {
 		super();
 		this.fullName = fullName;
 		this.phoneNumber = phoneNumber;
