@@ -4,6 +4,10 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+# Default IDE build output directories
+bin/
+out/
+
 ### STS ###
 .apt_generated
 .classpath
