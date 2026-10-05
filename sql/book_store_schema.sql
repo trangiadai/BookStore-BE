@@ -159,3 +159,21 @@ CREATE TABLE order_items (
     CONSTRAINT fk_order_items_product FOREIGN KEY (product_id) REFERENCES products(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+ALTER TABLE products 
+ADD COLUMN total_ratings INT DEFAULT 0,
+ADD COLUMN rating_sum INT DEFAULT 0,
+ADD COLUMN average_rating DECIMAL(3, 2) DEFAULT 0.00;
+
+CREATE TABLE reviews (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    order_item_id BIGINT NOT NULL UNIQUE,
+    product_id BIGINT NOT NULL,
+    account_id BIGINT NOT NULL,
+    rating INT NOT NULL CHECK (rating BETWEEN 1 AND 5),
+    comment TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_reviews_order_item FOREIGN KEY (order_item_id) REFERENCES order_items(id),
+    CONSTRAINT fk_reviews_product FOREIGN KEY (product_id) REFERENCES products(id),
+    CONSTRAINT fk_reviews_account FOREIGN KEY (account_id) REFERENCES accounts(id)
+);
+

@@ -158,5 +158,36 @@
 	      AND is_deleted = 0 
 	      AND quantity >= #{quantity}
 	</update>
+	
+	<update id="updateBatchStats" parameterType="map">
+        UPDATE products
+        SET 
+            total_ratings = total_ratings + CASE id
+                <foreach collection="statsList" item="stat">
+                    WHEN #{stat.productId} THEN #{stat.countIncrement}
+                </foreach>
+            END,
+            rating_sum = rating_sum + CASE id
+                <foreach collection="statsList" item="stat">
+                    WHEN #{stat.productId} THEN #{stat.sumIncrement}
+                </foreach>
+            END,
+            average_rating = ROUND(
+                (rating_sum + CASE id
+                    <foreach collection="statsList" item="stat">
+                        WHEN #{stat.productId} THEN #{stat.sumIncrement}
+                    </foreach>
+                END) / (total_ratings + CASE id
+                    <foreach collection="statsList" item="stat">
+                        WHEN #{stat.productId} THEN #{stat.countIncrement}
+                    </foreach>
+                END), 
+                2
+            )
+        WHERE id IN
+        <foreach collection="statsList" item="stat" open="(" separator="," close=")">
+            #{stat.productId}
+        </foreach>
+    </update>
 
 </mapper>

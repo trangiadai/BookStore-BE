@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import com.tgd.dao.mappers.ProductMapper;
 import com.tgd.dto.request.ProductSearchSortFilterRequest;
+import com.tgd.dto.request.ProductStatUpdate;
 import com.tgd.entity.Product;
 
 @Repository
@@ -94,14 +95,25 @@ public class ProductRepository {
 
 		return productMapper.searchSortFilterProducts(param);
 	}
-	
+
 	public int decreaseStock(Long productId, Integer quantity) {
-        Map<String, Object> params = new HashMap<>();
-        params.put("productId", productId);
-        params.put("quantity", quantity);
-        
-        return productMapper.decreaseStock(params);
-    }
+		Map<String, Object> params = new HashMap<>();
+		params.put("productId", productId);
+		params.put("quantity", quantity);
+
+		return productMapper.decreaseStock(params);
+	}
+
+	public void updateBatchStats(List<ProductStatUpdate> statsList) {
+		if (statsList == null || statsList.isEmpty()) {
+			return;
+		}
+
+		Map<String, Object> param = new HashMap<>();
+		param.put("statsList", statsList);
+
+		productMapper.updateBatchStats(param);
+	}
 
 	public ProductRepository(ProductMapper productMapper) {
 		super();

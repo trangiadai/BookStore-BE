@@ -29,4 +29,6 @@ public interface ProductMapper {
 	List<Product> searchSortFilterProducts(Map<String, Object> param);
 	
 	int decreaseStock(Map<String, Object> params);
+	
+	void updateBatchStats(Map<String, Object> param);
 }
