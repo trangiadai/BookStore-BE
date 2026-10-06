@@ -181,3 +181,5 @@ ALTER TABLE reviews
 ADD COLUMN updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 ADD COLUMN edit_count INT NOT NULL DEFAULT 0;
 
+CREATE INDEX idx_products_average_rating ON products(average_rating);
+

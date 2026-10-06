@@ -139,6 +139,13 @@
 	            AND p.selling_price &lt;= #{maxPrice}
 	        </if>
 	        
+	        <if test="minRating != null">
+	            AND p.average_rating &gt;= #{minRating}
+	        </if>
+	        <if test="maxRating != null">
+	            AND p.average_rating &lt;= #{maxRating}
+	        </if>
+	        
 	        <if test="createdFrom != null">
 	            AND p.created_at &gt;= #{createdFrom}
 	        </if>
@@ -174,16 +181,7 @@
                     WHEN #{stat.productId} THEN #{stat.sumIncrement}
                 </foreach>
             END,
-            average_rating = ROUND(
-                (rating_sum + CASE id
-                    <foreach collection="statsList" item="stat">
-                        WHEN #{stat.productId} THEN #{stat.sumIncrement}
-                    </foreach>
-                END) / (total_ratings + CASE id
-                    <foreach collection="statsList" item="stat">
-                        WHEN #{stat.productId} THEN #{stat.countIncrement}
-                    </foreach>
-                END), 2)
+            average_rating = ROUND(rating_sum/total_ratings, 2)
         WHERE id IN
         <foreach collection="statsList" item="stat" open="(" separator="," close=")">
             #{stat.productId}

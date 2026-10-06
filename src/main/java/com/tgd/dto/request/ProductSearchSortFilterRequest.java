@@ -33,43 +33,65 @@ public class ProductSearchSortFilterRequest {
 	@DecimalMax(value = "9999999999.99", message = "Max price cannot be over 9999999999.99")
 	@Schema(example = "1000000000.00")
 	private BigDecimal maxPrice;
-	
+
+	@DecimalMin(value = "0.0", message = "Min rating cannot be negative")
+	@DecimalMax(value = "5.0", message = "Min rating cannot exceed 5.0")
+	@Schema(example = "4.0")
+	private Double minRating;
+
+	@DecimalMin(value = "0.0", message = "Max rating cannot be negative")
+	@DecimalMax(value = "5.0", message = "Max rating cannot exceed 5.0")
+	@Schema(example = "5.0")
+	private Double maxRating;
+
 	@Schema(description = "The start date of filter", example = "2026-07-30 21:35:18")
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private LocalDateTime createdFrom;
-	
+
 	@Schema(description = "The end date of filter", example = "2026-12-08 21:35:18")
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private LocalDateTime createdTo;
-	
+
 	private SortField sortBy = SortField.CREATED_AT;
 	private SortDirection sortDirection = SortDirection.DESC;
-	
-	@JsonIgnore
-    @AssertTrue(message = "minPrice must be less than or equal to maxPrice")
-    public boolean isPriceRangeValid() {
-        if (minPrice == null || maxPrice == null) {
-            return true; 
-        }
-        return minPrice.compareTo(maxPrice) <= 0;
-    }
 
-    @JsonIgnore
-    @AssertTrue(message = "createdFrom date must be before or equal to createdTo date")
-    public boolean isDateRangeValid() {
-        if (createdFrom == null || createdTo == null) {
-            return true;
-        }
-        return !createdFrom.isAfter(createdTo);
-    }
+	@JsonIgnore
+	@AssertTrue(message = "minPrice must be less than or equal to maxPrice")
+	public boolean isPriceRangeValid() {
+		if (minPrice == null || maxPrice == null) {
+			return true;
+		}
+		return minPrice.compareTo(maxPrice) <= 0;
+	}
+
+	@JsonIgnore
+	@AssertTrue(message = "minRating must be less than or equal to maxRating")
+	public boolean isRatingRangeValid() {
+		if (minRating == null || maxRating == null) {
+			return true;
+		}
+		return minRating <= maxRating;
+	}
+
+	@JsonIgnore
+	@AssertTrue(message = "createdFrom date must be before or equal to createdTo date")
+	public boolean isDateRangeValid() {
+		if (createdFrom == null || createdTo == null) {
+			return true;
+		}
+		return !createdFrom.isAfter(createdTo);
+	}
 
 	public ProductSearchSortFilterRequest(String name, Long categoryId, BigDecimal minPrice, BigDecimal maxPrice,
-			LocalDateTime createdFrom, LocalDateTime createdTo, SortField sortBy, SortDirection sortDirection) {
+			Double minRating, Double maxRating, LocalDateTime createdFrom, LocalDateTime createdTo, SortField sortBy,
+			SortDirection sortDirection) {
 		super();
 		this.name = name;
 		this.categoryId = categoryId;
 		this.minPrice = minPrice;
 		this.maxPrice = maxPrice;
+		this.minRating = minRating;
+		this.maxRating = maxRating;
 		this.createdFrom = createdFrom;
 		this.createdTo = createdTo;
 		this.sortBy = sortBy;
@@ -111,6 +133,22 @@ public class ProductSearchSortFilterRequest {
 
 	public void setMaxPrice(BigDecimal maxPrice) {
 		this.maxPrice = maxPrice;
+	}
+	
+	public Double getMinRating() {
+		return minRating;
+	}
+
+	public void setMinRating(Double minRating) {
+		this.minRating = minRating;
+	}
+
+	public Double getMaxRating() {
+		return maxRating;
+	}
+
+	public void setMaxRating(Double maxRating) {
+		this.maxRating = maxRating;
 	}
 
 	public LocalDateTime getCreatedFrom() {
