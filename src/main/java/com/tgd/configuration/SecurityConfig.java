@@ -49,6 +49,7 @@ public class SecurityConfig {
 								.requestMatchers("/users/profile").authenticated()
 								.requestMatchers(HttpMethod.GET, "/users", "/users/search").hasRole("ADMIN")
 								.requestMatchers(HttpMethod.GET, "/categories/**", "/products/**").permitAll()
+								.requestMatchers(HttpMethod.GET, "/reviews/products/{productId}").permitAll()
 								.requestMatchers("/admin/**").hasRole("ADMIN")
 								.requestMatchers(HttpMethod.POST, "/categories/**", "/products/**").hasRole("ADMIN")
 								.requestMatchers(HttpMethod.PUT, "/categories/**", "/products/**").hasRole("ADMIN")

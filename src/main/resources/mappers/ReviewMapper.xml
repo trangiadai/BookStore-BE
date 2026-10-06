@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.tgd.dao.mappers.ReviewMapper">
+	<resultMap id="UserReviewResultMap" type="com.tgd.dto.response.UserReviewResponse">
+        <id property="id" column="review_id"/>
+        <result property="orderItemId" column="order_item_id"/>
+        <result property="rating" column="rating"/>
+        <result property="comment" column="comment"/>
+        <result property="editCount" column="edit_count"/>
+        <result property="createdAt" column="created_at"/>
+        
+        <!-- Nested Product Object Mapping -->
+        <association property="product" javaType="com.tgd.dto.response.UserReviewResponse$ProductSummary">
+            <id property="id" column="product_id"/>
+            <result property="name" column="product_name"/>
+        </association>
+    </resultMap>
 
     <insert id="createReview" parameterType="map" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO reviews (order_item_id, product_id, account_id, rating, comment)
@@ -27,6 +41,73 @@
           AND oi.product_id = #{productId}
           AND o.account_id = #{accountId}
           AND o.order_status = 'DELIVERED'
+    </select>
+    
+	<select id="getReviewsByProductId" resultType="com.tgd.dto.response.ReviewResponse">
+	    SELECT 
+	        id, 
+	        product_id AS productId, 
+	        account_id AS accountId, 
+	        rating, 
+	        comment, 
+	        created_at AS createdAt
+	    FROM reviews
+	    WHERE product_id = #{productId}
+	    ORDER BY created_at DESC
+	    LIMIT #{size} OFFSET #{offset}
+	</select>
+	
+	<select id="countByProductId" resultType="long">
+	    SELECT COUNT(*) 
+	    FROM reviews 
+	    WHERE product_id = #{productId}
+	</select>
+	
+	<select id="getReviewById" resultType="com.tgd.entity.Review">
+        SELECT 
+            id,
+            product_id AS productId,
+            account_id AS accountId,
+            order_item_id AS orderItemId,
+            rating,
+            comment,
+            edit_count AS editCount,
+            created_at AS createdAt,
+            updated_at AS updatedAt
+        FROM reviews
+        WHERE id = #{reviewId}
+    </select>
+	
+	<update id="updateReview">
+	    UPDATE reviews
+	    SET 
+	        rating = #{rating},
+	        comment = #{comment},
+	        edit_count = edit_count + 1
+	    WHERE id = #{id}
+	</update>
+	
+	<select id="getReviewsByAccountId" parameterType="map" resultMap="UserReviewResultMap">
+        SELECT 
+            r.id AS review_id,
+            r.order_item_id,
+            r.rating,
+            r.comment,
+            r.edit_count,
+            r.created_at,
+            p.id AS product_id,
+            p.name AS product_name
+        FROM reviews r
+        INNER JOIN products p ON r.product_id = p.id
+        WHERE r.account_id = #{accountId}
+        ORDER BY r.created_at DESC
+        LIMIT #{size} OFFSET #{offset}
+    </select>
+
+    <select id="countByAccountId" parameterType="map" resultType="long">
+        SELECT COUNT(*)
+        FROM reviews
+        WHERE account_id = #{accountId}
     </select>
 
 </mapper>

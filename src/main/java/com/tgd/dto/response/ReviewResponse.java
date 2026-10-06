@@ -1,31 +1,27 @@
-package com.tgd.entity;
+package com.tgd.dto.response;
 
 import java.time.LocalDateTime;
 
-public class Review {
+public class ReviewResponse {
 	private Long id;
-	private Long orderItemId;
 	private Long productId;
 	private Long accountId;
 	private Integer rating;
 	private String comment;
-	private Integer editCount;
 	private LocalDateTime createdAt;
 
-	public Review(Long id, Long orderItemId, Long productId, Long accountId, Integer rating, String comment,
-			Integer editCount, LocalDateTime createdAt) {
+	public ReviewResponse(Long id, Long productId, Long accountId, Integer rating, String comment,
+			LocalDateTime createdAt) {
 		super();
 		this.id = id;
-		this.orderItemId = orderItemId;
 		this.productId = productId;
 		this.accountId = accountId;
 		this.rating = rating;
 		this.comment = comment;
-		this.editCount = editCount;
 		this.createdAt = createdAt;
 	}
 
-	public Review() {
+	public ReviewResponse() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
@@ -36,14 +32,6 @@ public class Review {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public Long getOrderItemId() {
-		return orderItemId;
-	}
-
-	public void setOrderItemId(Long orderItemId) {
-		this.orderItemId = orderItemId;
 	}
 
 	public Long getProductId() {
@@ -76,14 +64,6 @@ public class Review {
 
 	public void setComment(String comment) {
 		this.comment = comment;
-	}
-
-	public Integer getEditCount() {
-		return editCount;
-	}
-
-	public void setEditCount(Integer editCount) {
-		this.editCount = editCount;
 	}
 
 	public LocalDateTime getCreatedAt() {

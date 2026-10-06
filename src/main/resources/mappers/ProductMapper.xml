@@ -183,9 +183,7 @@
                     <foreach collection="statsList" item="stat">
                         WHEN #{stat.productId} THEN #{stat.countIncrement}
                     </foreach>
-                END), 
-                2
-            )
+                END), 2)
         WHERE id IN
         <foreach collection="statsList" item="stat" open="(" separator="," close=")">
             #{stat.productId}
