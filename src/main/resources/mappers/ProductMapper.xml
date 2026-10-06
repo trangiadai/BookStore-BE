@@ -9,6 +9,7 @@
 		<result property="importPrice" column="product_import_price" />
 		<result property="sellingPrice" column="product_selling_price" />
 		<result property="quantity" column="product_quantity" />
+		<result property="averageRating" column="product_average_rating" />
 		<result property="description" column="product_description" />
 		<result property="categoryId" column="product_category_id" />
 		<result property="categoryName" column="product_category_name" />
@@ -28,6 +29,7 @@
 		p.import_price AS product_import_price,
 		p.selling_price AS product_selling_price,
 		p.quantity AS product_quantity,
+		p.average_rating AS product_average_rating,
 		p.description AS product_description,
 		p.category_id AS product_category_id,
         c.name AS product_category_name,

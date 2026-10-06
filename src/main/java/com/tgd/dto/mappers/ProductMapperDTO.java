@@ -17,6 +17,7 @@ public class ProductMapperDTO {
 		productReponse.setImportPrice(product.getImportPrice());
 		productReponse.setSellingPrice(product.getSellingPrice());
 		productReponse.setQuantity(product.getQuantity());
+		productReponse.setAverageRating(product.getAverageRating());
 		productReponse.setDescription(product.getDescription());
 		productReponse.setCategoryId(product.getCategoryId());
 		productReponse.setCategoryName(product.getCategoryName());

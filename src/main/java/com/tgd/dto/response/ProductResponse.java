@@ -12,6 +12,7 @@ public class ProductResponse {
 	private BigDecimal importPrice;
 	private BigDecimal sellingPrice;
 	private Integer quantity;
+	private Double averageRating;
 	private String description;
 	private Long categoryId;
 	private String categoryName;
@@ -19,14 +20,15 @@ public class ProductResponse {
 	private LocalDateTime createdAt;
 
 	public ProductResponse(Long id, String name, String productCategory, BigDecimal importPrice,
-			BigDecimal sellingPrice, Integer quantity, String description, Long categoryId, String categoryName,
-			Set<ProductImage> productImages, LocalDateTime createdAt) {
+			BigDecimal sellingPrice, Integer quantity, Double averageRating, String description, Long categoryId,
+			String categoryName, Set<ProductImage> productImages, LocalDateTime createdAt) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.importPrice = importPrice;
 		this.sellingPrice = sellingPrice;
 		this.quantity = quantity;
+		this.averageRating = averageRating;
 		this.description = description;
 		this.categoryId = categoryId;
 		this.categoryName = categoryName;
@@ -72,6 +74,14 @@ public class ProductResponse {
 
 	public void setQuantity(Integer quantity) {
 		this.quantity = quantity;
+	}
+
+	public Double getAverageRating() {
+		return averageRating;
+	}
+
+	public void setAverageRating(Double averageRating) {
+		this.averageRating = averageRating;
 	}
 
 	public String getDescription() {
