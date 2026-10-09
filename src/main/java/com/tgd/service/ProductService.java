@@ -3,6 +3,9 @@ package com.tgd.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,10 +55,15 @@ public class ProductService {
 		return ProductMapperDTO.toProductResponse(product);
 	}
 
-	public List<ProductResponse> getAllProducts() {
-		List<Product> products = productRepository.getAllProducts();
+	public Page<ProductResponse> getAllProducts(int page, int size) {
+		int offset = page * size;
+		List<Product> products = productRepository.getAllProducts(offset, size);
+		long total = productRepository.countAllProducts();
 
-		return products.stream().map(ProductMapperDTO::toProductResponse).collect(Collectors.toList());
+		List<ProductResponse> content = products.stream().map(ProductMapperDTO::toProductResponse)
+				.collect(Collectors.toList());
+
+		return new PageImpl<>(content, PageRequest.of(page, size), total);
 	}
 
 	@Transactional
@@ -90,10 +98,14 @@ public class ProductService {
 		return recoveredProductCount + recoveredImagesCount;
 	}
 
-	public List<ProductResponse> searchSortFilterProducts(ProductSearchSortFilterRequest criteria) {
+	public Page<ProductResponse> searchSortFilterProducts(ProductSearchSortFilterRequest criteria) {
 		List<Product> products = productRepository.searchSortFilterProducts(criteria);
+		long total = productRepository.countSearchSortFilterProducts(criteria);
 
-		return products.stream().map(ProductMapperDTO::toProductResponse).collect(Collectors.toList());
+		List<ProductResponse> content = products.stream().map(ProductMapperDTO::toProductResponse)
+				.collect(Collectors.toList());
+
+		return new PageImpl<>(content, PageRequest.of(criteria.getPage(), criteria.getSize()), total);
 	}
 
 	@Transactional

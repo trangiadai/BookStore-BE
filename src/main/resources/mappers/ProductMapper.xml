@@ -53,6 +53,35 @@
 		LEFT JOIN categories c ON p.category_id = c.id
 		WHERE p.is_deleted = 0
 	</sql>
+	
+	<!-- Shared WHERE clause for filtering -->
+	<sql id="SearchFilterWhere"> 
+		WHERE p.is_deleted = 0 
+		<if test="name != null and name != ''">
+			AND LOWER(p.name) LIKE CONCAT('%', LOWER(#{name}), '%')
+		</if>
+        <if test="categoryId != null">
+			AND p.category_id = #{categoryId}
+		</if>
+        <if test="minPrice != null">
+			AND p.selling_price &gt;= #{minPrice}
+		</if>
+        <if test="maxPrice != null">
+			AND p.selling_price &lt;= #{maxPrice}
+		</if>
+        <if test="minRating != null">
+			AND p.average_rating &gt;= #{minRating}
+		</if>
+        <if test="maxRating != null">
+			AND p.average_rating &lt;= #{maxRating}
+		</if>
+        <if test="createdFrom != null">
+			AND p.created_at &gt;= #{createdFrom}
+		</if>
+        <if test="createdTo != null">
+			AND p.created_at &lt;= #{createdTo}
+		</if>
+	</sql>
 
 	<!-- Fetch Single Active Product -->
 	<select id="getProductById" resultMap="ProductResultMap">
@@ -61,10 +90,28 @@
 	</select>
 
 	<!-- Fetch All Active Products -->
-	<select id="getAllProducts" resultMap="ProductResultMap">
-		<include refid="productFullSelect" />
-		ORDER BY p.id DESC
-	</select>
+	<select id="getAllProducts" parameterType="map" resultMap="ProductResultMap">
+        SELECT 
+            <include refid="ProductColumns" />,
+            <include refid="ProductImageColumns" />
+        FROM (
+            SELECT p.id
+            FROM products p
+            WHERE p.is_deleted = 0
+            ORDER BY p.id DESC
+            LIMIT #{size} OFFSET #{offset}
+        ) page_p
+        INNER JOIN products p ON page_p.id = p.id
+        LEFT JOIN product_images pi ON p.id = pi.product_id AND pi.is_deleted = 0
+        LEFT JOIN categories c ON p.category_id = c.id
+        ORDER BY p.id DESC
+    </select>
+    
+    <select id="countAllProducts" resultType="long">
+        SELECT COUNT(*)
+        FROM products p
+        WHERE p.is_deleted = 0
+    </select>
 	
 	<insert id="createProduct" useGeneratedKeys="true" keyProperty="id">
 		INSERT INTO products (name, import_price, selling_price, quantity, description, category_id)
@@ -115,50 +162,32 @@
 	    WHERE id = #{productId} AND is_deleted = 1
 	</update>
 	
-	<select id="searchSortFilterProducts" resultMap="ProductResultMap" parameterType="com.tgd.dto.request.ProductSearchSortFilterRequest">
-	    SELECT 
-	        <include refid="ProductColumns" />,
-	        <include refid="ProductImageColumns" />
-	    FROM products p
-	    LEFT JOIN product_images pi ON p.id = pi.product_id AND pi.is_deleted = 0
-	    LEFT JOIN categories c ON p.category_id = c.id
-	    <where>
-	        p.is_deleted = 0
-	        <if test="name != null and name != ''">
-	            AND LOWER(p.name) LIKE CONCAT('%', LOWER(#{name}), '%')
-	        </if>
-	        
-	        <if test="categoryId != null">
-	            AND p.category_id = #{categoryId}
-	        </if>
-	        
-	        <if test="minPrice != null">
-	            AND p.selling_price &gt;= #{minPrice}
-	        </if>
-	        <if test="maxPrice != null">
-	            AND p.selling_price &lt;= #{maxPrice}
-	        </if>
-	        
-	        <if test="minRating != null">
-	            AND p.average_rating &gt;= #{minRating}
-	        </if>
-	        <if test="maxRating != null">
-	            AND p.average_rating &lt;= #{maxRating}
-	        </if>
-	        
-	        <if test="createdFrom != null">
-	            AND p.created_at &gt;= #{createdFrom}
-	        </if>
-	        <if test="createdTo != null">
-	            AND p.created_at &lt;= #{createdTo}
-	        </if>
-	    </where>
-	    
-	    <!-- Dynamic Sorting -->
-	    <if test="sortBy != null and sortDirection != null">
-	        ORDER BY ${sortBy.columnName} ${sortDirection.name()}
-	    </if>
-	</select>
+	<select id="searchSortFilterProducts" parameterType="map" resultMap="ProductResultMap">
+        SELECT 
+            <include refid="ProductColumns" />,
+            <include refid="ProductImageColumns" />
+        FROM (
+            SELECT p.id
+            FROM products p
+            <include refid="SearchFilterWhere" />
+            <if test="sortBy != null and sortDirection != null">
+                ORDER BY ${sortBy.columnName} ${sortDirection.name()}
+            </if>
+            LIMIT #{size} OFFSET #{offset}
+        ) page_p
+        INNER JOIN products p ON page_p.id = p.id
+        LEFT JOIN product_images pi ON p.id = pi.product_id AND pi.is_deleted = 0
+        LEFT JOIN categories c ON p.category_id = c.id
+        <if test="sortBy != null and sortDirection != null">
+            ORDER BY ${sortBy.columnName} ${sortDirection.name()}
+        </if>
+    </select>
+	
+	<select id="countSearchSortFilterProducts" parameterType="map" resultType="long">
+        SELECT COUNT(*)
+        FROM products p
+        <include refid="SearchFilterWhere" />
+    </select>
 	
 	<update id="decreaseStock" parameterType="map">
 	    UPDATE products

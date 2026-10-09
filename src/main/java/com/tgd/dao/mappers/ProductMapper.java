@@ -10,9 +10,11 @@ import com.tgd.entity.Product;
 
 @Mapper
 public interface ProductMapper {
-	List<Product> getAllProducts();
+	List<Product> getAllProducts(Map<String, Object> param);
 
 	void createProduct(Map<String, Object> param);
+	
+	Long countAllProducts();
 
 	int updateProduct(Map<String, Object> param);
 
@@ -27,6 +29,8 @@ public interface ProductMapper {
 	int recoverProduct(Map<String, Object> param);
 
 	List<Product> searchSortFilterProducts(Map<String, Object> param);
+	
+	Long countSearchSortFilterProducts(Map<String, Object> param);
 	
 	int decreaseStock(Map<String, Object> params);
 	

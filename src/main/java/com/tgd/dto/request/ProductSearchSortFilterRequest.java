@@ -13,7 +13,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 
 public class ProductSearchSortFilterRequest {
@@ -54,6 +56,12 @@ public class ProductSearchSortFilterRequest {
 
 	private SortField sortBy = SortField.CREATED_AT;
 	private SortDirection sortDirection = SortDirection.DESC;
+	
+	@PositiveOrZero(message = "Page number must be greater than or equal 0")
+	private int page = 0;
+	
+	@Min(value = 5, message = "Page size must be greater than or equal 5")
+	private int size = 10;
 
 	@JsonIgnore
 	@AssertTrue(message = "minPrice must be less than or equal to maxPrice")
@@ -84,7 +92,7 @@ public class ProductSearchSortFilterRequest {
 
 	public ProductSearchSortFilterRequest(String name, Long categoryId, BigDecimal minPrice, BigDecimal maxPrice,
 			Double minRating, Double maxRating, LocalDateTime createdFrom, LocalDateTime createdTo, SortField sortBy,
-			SortDirection sortDirection) {
+			SortDirection sortDirection, int page, int size) {
 		super();
 		this.name = name;
 		this.categoryId = categoryId;
@@ -96,6 +104,8 @@ public class ProductSearchSortFilterRequest {
 		this.createdTo = createdTo;
 		this.sortBy = sortBy;
 		this.sortDirection = sortDirection;
+		this.page = page;
+		this.size = size;
 	}
 
 	public ProductSearchSortFilterRequest() {
@@ -183,4 +193,24 @@ public class ProductSearchSortFilterRequest {
 		this.sortDirection = sortDirection;
 	}
 
+	public int getPage() {
+		return page;
+	}
+
+	public void setPage(int page) {
+		this.page = page;
+	}
+
+	public int getSize() {
+		return size;
+	}
+
+	public void setSize(int size) {
+		this.size = size;
+	}
+	
+	@JsonIgnore
+	public int getOffset() {
+	    return page * size;
+	}
 }

@@ -23,9 +23,15 @@ public class ProductRepository {
 		return productMapper.getProductById(param);
 	}
 
-	public List<Product> getAllProducts() {
-
-		return productMapper.getAllProducts();
+	public List<Product> getAllProducts(int offset, int size) {
+        Map<String, Object> param = new HashMap<>();
+        param.put("offset", offset);
+        param.put("size", size);
+        return productMapper.getAllProducts(param);
+    }
+	
+	public Long countAllProducts() {
+		return productMapper.countAllProducts();
 	}
 
 	public Optional<Product> getSoftDeletedProductById(Long id) {
@@ -84,16 +90,34 @@ public class ProductRepository {
 
 	public List<Product> searchSortFilterProducts(ProductSearchSortFilterRequest criteria) {
 		Map<String, Object> param = new HashMap<>();
-		param.put("name", criteria.getName());
-		param.put("categoryId", criteria.getCategoryId());
-		param.put("minPrice", criteria.getMinPrice());
-		param.put("maxPrice", criteria.getMaxPrice());
-		param.put("createdFrom", criteria.getCreatedFrom());
-		param.put("createdTo", criteria.getCreatedTo());
-		param.put("sortBy", criteria.getSortBy());
-		param.put("sortDirection", criteria.getSortDirection());
+        param.put("name", criteria.getName());
+        param.put("categoryId", criteria.getCategoryId());
+        param.put("minPrice", criteria.getMinPrice());
+        param.put("maxPrice", criteria.getMaxPrice());
+        param.put("minRating", criteria.getMinRating());
+        param.put("maxRating", criteria.getMaxRating());
+        param.put("createdFrom", criteria.getCreatedFrom());
+        param.put("createdTo", criteria.getCreatedTo());
+        param.put("sortBy", criteria.getSortBy());
+        param.put("sortDirection", criteria.getSortDirection());
+        param.put("offset", criteria.getOffset());
+        param.put("size", criteria.getSize());
 
 		return productMapper.searchSortFilterProducts(param);
+	}
+	
+	public Long countSearchSortFilterProducts(ProductSearchSortFilterRequest criteria) {
+		Map<String, Object> param = new HashMap<>();
+        param.put("name", criteria.getName());
+        param.put("categoryId", criteria.getCategoryId());
+        param.put("minPrice", criteria.getMinPrice());
+        param.put("maxPrice", criteria.getMaxPrice());
+        param.put("minRating", criteria.getMinRating());
+        param.put("maxRating", criteria.getMaxRating());
+        param.put("createdFrom", criteria.getCreatedFrom());
+        param.put("createdTo", criteria.getCreatedTo());
+
+		return productMapper.countSearchSortFilterProducts(param);
 	}
 
 	public int decreaseStock(Long productId, Integer quantity) {
