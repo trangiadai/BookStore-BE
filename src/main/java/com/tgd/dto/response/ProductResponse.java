@@ -2,6 +2,8 @@ package com.tgd.dto.response;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import com.tgd.entity.ProductImage;
@@ -16,12 +18,12 @@ public class ProductResponse {
 	private String description;
 	private Long categoryId;
 	private String categoryName;
-	private Set<ProductImage> productImages;
+	List<ProductImage> productImages = new ArrayList<>();
 	private LocalDateTime createdAt;
 
 	public ProductResponse(Long id, String name, String productCategory, BigDecimal importPrice,
 			BigDecimal sellingPrice, Integer quantity, Double averageRating, String description, Long categoryId,
-			String categoryName, Set<ProductImage> productImages, LocalDateTime createdAt) {
+			String categoryName, List<ProductImage> productImages, LocalDateTime createdAt) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -108,11 +110,11 @@ public class ProductResponse {
 		this.categoryName = categoryName;
 	}
 
-	public Set<ProductImage> getProductImages() {
+	public List<ProductImage> getProductImages() {
 		return productImages;
 	}
 
-	public void setProductImages(Set<ProductImage> productImages) {
+	public void setProductImages(List<ProductImage> productImages) {
 		this.productImages = productImages;
 	}
 

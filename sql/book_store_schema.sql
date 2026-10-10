@@ -183,3 +183,10 @@ ADD COLUMN edit_count INT NOT NULL DEFAULT 0;
 
 CREATE INDEX idx_products_average_rating ON products(average_rating);
 
+ALTER TABLE product_images 
+ADD COLUMN is_primary TINYINT(1) NOT NULL DEFAULT 0,
+ADD COLUMN display_order INT NOT NULL DEFAULT 0;
+
+-- Creates a conditional unique index so a product_id can only have ONE row where is_primary = 1
+CREATE UNIQUE INDEX idx_product_primary_image 
+ON product_images (product_id, (CASE WHEN is_primary = 1 THEN 1 ELSE NULL END));

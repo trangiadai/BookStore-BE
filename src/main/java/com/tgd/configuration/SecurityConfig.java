@@ -51,9 +51,9 @@ public class SecurityConfig {
 								.requestMatchers(HttpMethod.GET, "/categories/**", "/products/**").permitAll()
 								.requestMatchers(HttpMethod.GET, "/reviews/products/{productId}").permitAll()
 								.requestMatchers("/admin/**").hasRole("ADMIN")
-								.requestMatchers(HttpMethod.POST, "/categories/**", "/products/**").hasRole("ADMIN")
-								.requestMatchers(HttpMethod.PUT, "/categories/**", "/products/**").hasRole("ADMIN")
-								.requestMatchers(HttpMethod.DELETE, "/categories/**", "/products/**").hasRole("ADMIN")
+								.requestMatchers(HttpMethod.POST, "/categories/**", "/products/**", "/product-images/**").hasRole("ADMIN")
+								.requestMatchers(HttpMethod.PUT, "/categories/**", "/products/**", "/product-images/**").hasRole("ADMIN")
+								.requestMatchers(HttpMethod.DELETE, "/categories/**", "/products/**", "/product-images/**").hasRole("ADMIN")
 
 								.anyRequest().authenticated())
 				.oauth2ResourceServer(

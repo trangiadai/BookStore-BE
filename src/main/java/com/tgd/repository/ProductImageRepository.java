@@ -40,16 +40,44 @@ public class ProductImageRepository {
 		param.put("url", productImage.getUrl());
 		param.put("publicId", productImage.getPublicId());
 		param.put("productId", productImage.getProductId());
+		param.put("isPrimary", Boolean.TRUE.equals(productImage.getIsPrimary()) ? 1 : 0);
+	    param.put("displayOrder", productImage.getDisplayOrder());
 
 		productImageMapper.createProductImage(param);
 		return (Number) param.get("id");
 	}
+	
+	public boolean hasPrimaryImage(Long productId) {
+	    Map<String, Object> param = new HashMap<>();
+	    param.put("productId", productId);
+	    return productImageMapper.hasPrimaryImage(param);
+	}
+
+	public int clearPrimaryImage(Long productId) {
+	    Map<String, Object> param = new HashMap<>();
+	    param.put("productId", productId);
+	    return productImageMapper.clearPrimaryImage(param);
+	}
+
+	public int setPrimaryImage(Long imageId, Long productId) {
+	    Map<String, Object> param = new HashMap<>();
+	    param.put("imageId", imageId);
+	    param.put("productId", productId);
+	    return productImageMapper.setPrimaryImage(param);
+	}
+	
 
 	public int softDeleteProductImage(Long productImageId) {
 		Map<String, Object> param = new HashMap<>();
 		param.put("productImageId", productImageId);
 
 		return productImageMapper.softDeleteProductImage(param);
+	}
+	
+	public int promoteFirstRemainingImageToPrimary(Long productId) {
+	    Map<String, Object> param = new HashMap<>();
+	    param.put("productId", productId);
+	    return productImageMapper.promoteFirstRemainingImageToPrimary(param);
 	}
 
 	public int softDeleteImagesByProductId(Long productId) {

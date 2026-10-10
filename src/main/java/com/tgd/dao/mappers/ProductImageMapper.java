@@ -13,8 +13,16 @@ public interface ProductImageMapper {
 	Optional<ProductImage> getProductImageById(Map<String, Object> param);
 
 	int createProductImage(Map<String, Object> param);
+	
+	boolean hasPrimaryImage(Map<String, Object> param);
+
+    int clearPrimaryImage(Map<String, Object> param);
+
+    int setPrimaryImage(Map<String, Object> param);
 
 	int softDeleteProductImage(Map<String, Object> param);
+	
+	int promoteFirstRemainingImageToPrimary(Map<String, Object> param);
 
 	int softDeleteImagesByProductId(Map<String, Object> param);
 

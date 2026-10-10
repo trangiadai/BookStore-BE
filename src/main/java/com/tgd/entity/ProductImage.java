@@ -5,13 +5,17 @@ public class ProductImage {
 	private String url;
 	private String publicId;
 	private Long productId;
+	private Boolean isPrimary;
+	private Integer displayOrder;
 
-	public ProductImage(Long id, String url, String publicId, Long productId) {
+	public ProductImage(Long id, String url, String publicId, Long productId, Boolean isPrimary, Integer displayOrder) {
 		super();
 		this.id = id;
 		this.url = url;
 		this.publicId = publicId;
 		this.productId = productId;
+		this.isPrimary = isPrimary;
+		this.displayOrder = displayOrder;
 	}
 
 	public ProductImage() {
@@ -51,4 +55,19 @@ public class ProductImage {
 		this.publicId = publicId;
 	}
 
+	public Boolean getIsPrimary() {
+		return isPrimary;
+	}
+
+	public void setIsPrimary(Boolean isPrimary) {
+		this.isPrimary = isPrimary;
+	}
+
+	public Integer getDisplayOrder() {
+		return displayOrder;
+	}
+
+	public void setDisplayOrder(Integer displayOrder) {
+		this.displayOrder = displayOrder;
+	}
 }

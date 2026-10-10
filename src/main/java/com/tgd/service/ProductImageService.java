@@ -29,11 +29,21 @@ public class ProductImageService {
 
 	@Transactional
 	public int softDeleteProductImage(Long productImageId) {
-		ProductImage productImage = getProductImageById(productImageId);
-		if (productImage == null) {
-			throw new IllegalArgumentException("Not found the product image with id: " + productImageId);
-		}
-		return productImageRepository.softDeleteProductImage(productImageId);
+	    ProductImage productImage = getProductImageById(productImageId);
+	    if (productImage == null) {
+	        throw new IllegalArgumentException("Not found the product image with id: " + productImageId);
+	    }
+
+	    int result = productImageRepository.softDeleteProductImage(productImageId);
+
+	    // If deleted image was primary, clear its flag and fallback to another remaining image
+	    if (Boolean.TRUE.equals(productImage.getIsPrimary())) {
+	        productImageRepository.clearPrimaryImage(productImage.getProductId());
+	        // Optional: Pick remaining active image and set as new cover
+	        productImageRepository.promoteFirstRemainingImageToPrimary(productImage.getProductId());
+	    }
+
+	    return result;
 	}
 
 	public int softDeleteImagesByProductId(Long productId) {
@@ -123,6 +133,24 @@ public class ProductImageService {
 			}
 			throw new RuntimeException("Failed to save product images to database", e);
 		}
+	}
+	
+	@Transactional
+	public void setCoverImage(Long productId, Long imageId) {
+	    // 1. Verify image exists and belongs to active product
+	    ProductImage image = getProductImageById(imageId);
+	    if (!image.getProductId().equals(productId)) {
+	        throw new IllegalArgumentException("Image " + imageId + " does not belong to product " + productId);
+	    }
+
+	    // 2. Clear current primary flag for product
+	    productImageRepository.clearPrimaryImage(productId);
+
+	    // 3. Set new primary image
+	    int updatedRows = productImageRepository.setPrimaryImage(imageId, productId);
+	    if (updatedRows == 0) {
+	        throw new IllegalStateException("Failed to set image as primary cover.");
+	    }
 	}
 
 	public ProductImage uploadToCloudinary(MultipartFile rawProductImage) throws IOException {

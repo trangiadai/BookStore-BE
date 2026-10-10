@@ -2,7 +2,8 @@ package com.tgd.entity;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Product {
 	private Long id;
@@ -14,12 +15,12 @@ public class Product {
 	private String description;
 	private Long categoryId;
 	private String categoryName;
-	private Set<ProductImage> productImages;
+	private List<ProductImage> productImages = new ArrayList<>();
 	private LocalDateTime createdAt;
 
 	public Product(Long id, String name, BigDecimal importPrice, BigDecimal sellingPrice, Integer quantity,
 			Double averageRating, String description, Long categoryId, String categoryName,
-			Set<ProductImage> productImages, LocalDateTime createdAt) {
+			List<ProductImage> productImages, LocalDateTime createdAt) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -111,11 +112,11 @@ public class Product {
 		this.categoryName = categoryName;
 	}
 
-	public Set<ProductImage> getProductImages() {
+	public List<ProductImage> getProductImages() {
 		return productImages;
 	}
 
-	public void setProductImages(Set<ProductImage> productImages) {
+	public void setProductImages(List<ProductImage> productImages) {
 		this.productImages = productImages;
 	}
 
